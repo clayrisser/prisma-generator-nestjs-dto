@@ -31,6 +31,7 @@ import type {
   ImportStatementParams,
   ParsedField,
 } from '../types';
+import { isAnnotatedWithDoc } from '../api-decorator';
 
 interface ComputeCreateDtoParamsParam {
   model: Model;
@@ -43,6 +44,7 @@ export const computeCreateDtoParams = ({
   templateHelpers,
 }: ComputeCreateDtoParamsParam): CreateDtoParams => {
   let hasEnum = false;
+  let hasDoc = false;
   const imports: ImportStatementParams[] = [];
   const apiExtraModels: string[] = [];
   const extraClasses: string[] = [];
@@ -105,13 +107,15 @@ export const computeCreateDtoParams = ({
 
     if (field.kind === 'enum') hasEnum = true;
 
+    hasDoc = isAnnotatedWithDoc(field);
+
     return [...result, mapDMMFToParsedField(field, overrides)];
   }, [] as ParsedField[]);
 
-  if (apiExtraModels.length || hasEnum) {
+  if (apiExtraModels.length || hasEnum || hasDoc) {
     const destruct = [];
     if (apiExtraModels.length) destruct.push('ApiExtraModels');
-    if (hasEnum) destruct.push('ApiProperty');
+    if (hasEnum || hasDoc) destruct.push('ApiProperty');
     imports.unshift({ from: '@nestjs/swagger', destruct });
   }
 

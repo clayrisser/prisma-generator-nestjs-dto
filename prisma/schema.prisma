@@ -21,9 +21,13 @@ model Product {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name        String   @db.VarChar(255)
   description String   @db.VarChar(1024)
+  /// @maxItems 5
   images      Json[]   @db.Json
   highlighted Boolean? @default(false)
+  /// @description Number of reviews
+  /// @minimum 9
   reviewCount Int?     @default(0)
+  type        ProductType
   attributes  Json?
   score       Float?
   categoryId  String   @db.Uuid
@@ -58,4 +62,9 @@ model Category {
 model Company {
   id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   Product Product[]
+}
+
+enum ProductType {
+  digital
+  analogue
 }

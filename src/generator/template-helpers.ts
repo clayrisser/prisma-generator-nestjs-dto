@@ -1,4 +1,5 @@
 import { ImportStatementParams, ParsedField } from './types';
+import { decorateApiProperty } from './api-decorator';
 
 const PrismaScalarToTypeScript: Record<string, string> = {
   String: 'string',
@@ -147,10 +148,7 @@ export const makeHelpers = ({
     useInputTypes = false,
     forceOptional = false,
   ) =>
-    `${when(
-      field.kind === 'enum',
-      `@ApiProperty({ enum: ${fieldType(field, useInputTypes)}})\n`,
-    )}${field.name}${unless(
+    `${decorateApiProperty(field)}${field.name}${unless(
       field.isRequired && !forceOptional,
       '?',
     )}: ${fieldType(field, useInputTypes)};`;
@@ -167,10 +165,10 @@ export const makeHelpers = ({
     )}`;
 
   const fieldToEntityProp = (field: ParsedField) =>
-    `${field.name}${unless(field.isRequired, '?')}: ${fieldType(field)} ${when(
-      field.isNullable,
-      ' | null',
-    )};`;
+    `${decorateApiProperty(field)}${field.name}${unless(
+      field.isRequired,
+      '?',
+    )}: ${fieldType(field)} ${when(field.isNullable, ' | null')};`;
 
   const fieldsToEntityProps = (fields: ParsedField[]) =>
     `${each(fields, (field) => fieldToEntityProp(field), '\n')}`;

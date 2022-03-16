@@ -18,6 +18,7 @@ import type {
   ParsedField,
 } from '../types';
 import type { TemplateHelpers } from '../template-helpers';
+import { isAnnotatedWithDoc } from '../api-decorator';
 
 interface ComputeEntityParamsParam {
   model: Model;
@@ -29,6 +30,8 @@ export const computeEntityParams = ({
   allModels,
   templateHelpers,
 }: ComputeEntityParamsParam): EntityParams => {
+  let hasEnum = false;
+  let hasDoc = false;
   const imports: ImportStatementParams[] = [];
   const apiExtraModels: string[] = [];
 
@@ -110,11 +113,19 @@ export const computeEntityParams = ({
       overrides.isNullable = !isAnyRelationRequired;
     }
 
+    if (field.kind === 'enum') hasEnum = true;
+
+    hasDoc = isAnnotatedWithDoc(field);
+
     return [...result, mapDMMFToParsedField(field, overrides)];
   }, [] as ParsedField[]);
 
-  if (apiExtraModels.length)
-    imports.unshift({ from: '@nestjs/swagger', destruct: ['ApiExtraModels'] });
+  if (apiExtraModels.length || hasEnum || hasDoc) {
+    const destruct = [];
+    if (apiExtraModels.length) destruct.push('ApiExtraModels');
+    if (hasEnum || hasDoc) destruct.push('ApiProperty');
+    imports.unshift({ from: '@nestjs/swagger', destruct });
+  }
 
   const importPrismaClient = makeImportsFromPrismaClient(fields);
   if (importPrismaClient) imports.unshift(importPrismaClient);
