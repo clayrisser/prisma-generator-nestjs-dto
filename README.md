@@ -16,7 +16,7 @@ Generates `ConnectDTO`, `CreateDTO`, `UpdateDTO`, and `Entity` classes for model
 
 These classes can also be used with the built-in [ValidationPipe](https://docs.nestjs.com/techniques/validation#using-the-built-in-validationpipe) and [Serialization](https://docs.nestjs.com/techniques/serialization).
 
-This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds support to enhance fields with additional schema information, e.g., description. [OpenAPI annotations](#openapi-annotations).
+This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds support to enhance fields with additional schema information, e.g., description. See [Schema Object annotations](#schema-object-annotations).
 
 ### ToDo
 
@@ -82,11 +82,11 @@ model Post {
 - @DtoRelationCanCreateOnUpdate - adds [create](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#create-a-related-record) option on a relation field in the generated `UpdateDTO` - useful when you want to allow to create related model instances
 - @DtoRelationCanConnectOnUpdate - adds [connect](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#connect-an-existing-record) option on a relation field in the generated `UpdateDTO` - useful when you want/need to connect to an existing related instance
 
-### OpenAPI annotations
+### Schema Object annotations
 
 With `@nestjs/swagger`, you can generate an API specification from code.
 Routes, request bodies, query parameters, etc., are annotated with special decorators.
-Properties can be annotated with the `@ApiProperty()` decorator to add schema information.
+Properties can be annotated with the `@ApiProperty()` decorator to add schema object information.
 They are partially added at runtime, which will then include `type`, `nullable`, etc. 
 But additional information, such as description, need to be added manually.
 
