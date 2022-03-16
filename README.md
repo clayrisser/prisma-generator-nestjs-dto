@@ -1,7 +1,7 @@
 # Prisma Generator NestJS DTO
 
-[![Release](https://badge.fury.io/js/%40vegardit%2Fprisma-generator-nestjs-dto.svg)](https://www.npmjs.com/package/@vegardit/prisma-generator-nestjs-dto)
-[![License](https://img.shields.io/github/license/vegardit/prisma-generator-nestjs-dto.svg?label=license)](#license)
+[![Release](https://badge.fury.io/js/%40brakebein%2Fprisma-generator-nestjs-dto.svg)](https://www.npmjs.com/package/@brakebein/prisma-generator-nestjs-dto)
+[![License](https://img.shields.io/github/license/Brakebein/prisma-generator-nestjs-dto.svg?label=license)](#license)
 
 1. [What is it?](#what-is-it)
 1. [Usage](#usage)
@@ -10,16 +10,22 @@
 1. [Principles](#principles)
 1. [License](#license)
 
-## <a name="what-is-it"></a>What is it?
+## What is it?
 
 Generates `ConnectDTO`, `CreateDTO`, `UpdateDTO`, and `Entity` classes for models in your Prisma Schema. This is useful if you want to leverage [OpenAPI](https://docs.nestjs.com/openapi/introduction) in your [NestJS](https://nestjs.com/) application - but also helps with GraphQL resources as well). NestJS Swagger requires input parameters in [controllers to be described through classes](https://docs.nestjs.com/openapi/types-and-parameters) because it leverages TypeScript's emitted metadata and `Reflection` to generate models/components for the OpenAPI spec. It does the same for response models/components on your controller methods.
 
 These classes can also be used with the built-in [ValidationPipe](https://docs.nestjs.com/techniques/validation#using-the-built-in-validationpipe) and [Serialization](https://docs.nestjs.com/techniques/serialization).
 
-## <a name="usage"></a>Usage?
+This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds support to enhance fields with additional schema information, e.g., description. [OpenAPI annotations](#openapi-annotations).
+
+### ToDo
+
+- [ ] fix `enum` handling
+
+## Usage?
 
 ```sh
-npm install --save-dev @vegardit/prisma-generator-nestjs-dto
+npm install --save-dev @brakebein/prisma-generator-nestjs-dto
 ```
 
 ```prisma
@@ -53,7 +59,7 @@ All parameters are optional.
 - [`entitySuffix`]: (default: `""`) - phrase to suffix every `Entity` class with
 - [`fileNamingStyle`]: (default: `"camel"`) - how to name generated files. Valid choices are `"camel"`, `"pascal"`, `"kebab"` and `"snake"`.
 
-## <a name="annotations"></a>Annotations
+## Annotations
 
 Annotations provide additional information to help this generator understand your intentions. They are applied as [tripple slash comments](https://www.prisma.io/docs/concepts/components/prisma-schema#comments) to a field node in your Prisma Schema. You can apply multiple annotations to the same field.
 
@@ -76,7 +82,58 @@ model Post {
 - @DtoRelationCanCreateOnUpdate - adds [create](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#create-a-related-record) option on a relation field in the generated `UpdateDTO` - useful when you want to allow to create related model instances
 - @DtoRelationCanConnectOnUpdate - adds [connect](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#connect-an-existing-record) option on a relation field in the generated `UpdateDTO` - useful when you want/need to connect to an existing related instance
 
-## <a name="example"></a>Example
+### OpenAPI annotations
+
+With `@nestjs/swagger`, you can generate an API specification from code.
+Routes, request bodies, query parameters, etc., are annotated with special decorators.
+Properties can be annotated with the `@ApiProperty()` decorator to add schema information.
+They are partially added at runtime, which will then include `type`, `nullable`, etc. 
+But additional information, such as description, need to be added manually.
+
+If using a generator like this, any custom `@ApiProperty()` annotation would be overridden when updating the DTOs.
+To enhance a field with additional schema information, add the schema property prefixed with `@` to the comment section above the field.
+
+Currently, following schema properties are supported:
+
+* `description`
+* `minimum`
+* `maximum`
+* `exclusiveMinimum`
+* `exclusiveMaximum`
+* `minLength`
+* `maxLength`
+* `minItems`
+* `maxItems`
+
+Additionally, special data types are inferred and annotated as well:
+
+* `Int: { type: 'integer', format: 'int32' }`
+* `BigInt: { type: 'integer', format: 'int64' }`
+* `Float: { type: 'number', format: 'float' }`
+* `Decimal: { type: 'number', format: 'double' }`
+* `DateTime: { type: 'string', format: 'date-time' }`
+
+This example using `@description` and `@minimum` tags
+
+```prisma
+/// @description Number of reviews
+/// @minimum 9
+reviewCount Int?     @default(0)
+```
+
+will generate `@ApiProperty()` decorator with `description` and `minimum` as properties as well as `type` and `format` to specify the data type.
+
+```typescript
+@ApiProperty({
+  description: 'Number of reviews',
+  minimum: 9,
+  type: 'integer',
+  format: 'int32',
+})
+reviewCount: number | null;
+```
+
+## Example
 
 <details>
   <summary>Prisma Schema</summary>
@@ -208,7 +265,7 @@ export class Question {
 
 </details>
 
-## <a name="principles"></a>Principles
+## Principles
 
 Generally we read field properties from the `DMMF.Field` information provided by `@prisma/generator-helper`. Since a few scenarios don't become quite clear from that, we also check for additional [annotations](#annotations) (or `decorators`) in a field's `documentation` (that is anything provided as a [tripple slash comments](https://www.prisma.io/docs/concepts/components/prisma-schema#comments) for that field in your `prisma.schema`).
 
@@ -275,6 +332,6 @@ Relation and [relation scalar](https://www.prisma.io/docs/concepts/components/pr
   - the relation was originally flagged as required (`isRequired = true`)
   - the relation field is annotated with `@DtoRelationRequired` (do this when you mark a relation as optional in PrismaSchema because you don't want (SQL) `ON DELETE CASCADE` behavior - but your logical data schema sees this relation as required)
 
-## <a name="license"></a>License
+## License
 
-All files are released under the [Apache License 2.0](https://github.com/vegardit/prisma-generator-nestjs-dto/blob/master/LICENSE).
+All files are released under the [Apache License 2.0](https://github.com/Brakebein/prisma-generator-nestjs-dto/blob/master/LICENSE).
