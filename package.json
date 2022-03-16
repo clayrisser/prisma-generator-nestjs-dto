@@ -1,20 +1,26 @@
 {
   "name": "@brakebein/prisma-generator-nestjs-dto",
   "description": "Generates DTO and Entity classes from Prisma Schema for NestJS",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "license": "Apache-2.0",
   "author": {
     "name": "Benjamin Kroeger",
     "email": "bk@vegardit.com",
     "url": "https://vegardit.com/"
   },
+  "contributors": [{
+    "name": "Brakebein",
+    "url": "https://github.com/Brakebein"
+  }],
   "main": "dist/index.js",
   "keywords": [
     "prisma",
     "generator",
     "nestjs",
     "dto",
-    "typescript"
+    "typescript",
+    "swagger",
+    "openapi"
   ],
   "scripts": {
     "prebuild": "npm run cleanup:generated",
