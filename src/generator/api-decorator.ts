@@ -68,7 +68,6 @@ export function decorateApiProperty(field: ParsedField): string {
   }
 
   if (field.kind === 'enum') {
-    console.log(field);
     properties.push({ name: 'enum', value: field.type });
   }
 

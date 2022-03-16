@@ -92,7 +92,7 @@ export const computeUpdateDtoParams = ({
 
     if (field.kind === 'enum') hasEnum = true;
 
-    hasDoc = isAnnotatedWithDoc(field);
+    if (isAnnotatedWithDoc(field)) hasDoc = true;
 
     return [...result, mapDMMFToParsedField(field, overrides)];
   }, [] as ParsedField[]);
