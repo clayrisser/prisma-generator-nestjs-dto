@@ -20,7 +20,7 @@ export interface ParsedField {
    * **must not be `true` when `isRequired` is `true`**
    */
   isNullable?: boolean;
-  hasDefaultValue: boolean;
+  hasDefaultValue?: boolean;
   default?: any;
 }
 
