@@ -28,6 +28,7 @@ model Product {
   /// @minimum 9
   reviewCount Int?     @default(0)
   type        ProductType
+  tags        String[]
   attributes  Json?
   score       Float?
   categoryId  String   @db.Uuid
