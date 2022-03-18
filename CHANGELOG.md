@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.7.0] - 2022-03-18
+
+### Added
+
+- add default value (if any) to `@ApiProperty()`
+
+## [1.6.2] - 2022-03-16
+
+### Added
+
+- process additional documentation tags to generate `@ApiProperty()` decorator
+- translate prisma type to schema object type and format
+
 ## [1.4.1] - 2021-10-08
 
 - upgrades prisma dependencies to their latest 3.x versions

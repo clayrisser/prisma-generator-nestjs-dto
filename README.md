@@ -16,7 +16,7 @@ Generates `ConnectDTO`, `CreateDTO`, `UpdateDTO`, and `Entity` classes for model
 
 These classes can also be used with the built-in [ValidationPipe](https://docs.nestjs.com/techniques/validation#using-the-built-in-validationpipe) and [Serialization](https://docs.nestjs.com/techniques/serialization).
 
-This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds support to enhance fields with additional schema information, e.g., description. See [Schema Object annotations](#schema-object-annotations).
+This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds support to enhance fields with additional schema information, e.g., description to generate a `@ApiProperty()` decorator. See [Schema Object annotations](#schema-object-annotations).
 
 ### ToDo
 
@@ -122,6 +122,7 @@ reviewCount Int?     @default(0)
 ```
 
 will generate `@ApiProperty()` decorator with `description` and `minimum` as properties as well as `type` and `format` to specify the data type.
+If a default value is specified, it gets also added to the decorator. 
 
 ```typescript
 @ApiProperty({
@@ -129,6 +130,7 @@ will generate `@ApiProperty()` decorator with `description` and `minimum` as pro
   minimum: 9,
   type: 'integer',
   format: 'int32',
+  default: 0
 })
 reviewCount: number | null;
 ```
