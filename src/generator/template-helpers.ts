@@ -147,8 +147,9 @@ export const makeHelpers = ({
     field: ParsedField,
     useInputTypes = false,
     forceOptional = false,
+    omitAnnotation = false,
   ) =>
-    `${decorateApiProperty(field)}${field.name}${unless(
+    `${unless(omitAnnotation, decorateApiProperty(field))}${field.name}${unless(
       field.isRequired && !forceOptional,
       '?',
     )}: ${fieldType(field, useInputTypes)};`;
@@ -157,10 +158,12 @@ export const makeHelpers = ({
     fields: ParsedField[],
     useInputTypes = false,
     forceOptional = false,
+    omitAnnotation = false,
   ) =>
     `${each(
       fields,
-      (field) => fieldToDtoProp(field, useInputTypes, forceOptional),
+      (field) =>
+        fieldToDtoProp(field, useInputTypes, forceOptional, omitAnnotation),
       '\n',
     )}`;
 
