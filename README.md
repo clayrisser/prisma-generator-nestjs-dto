@@ -12,7 +12,7 @@
 
 ## What is it?
 
-Generates `ConnectDTO`, `CreateDTO`, `UpdateDTO`, and `Entity` classes for models in your Prisma Schema. This is useful if you want to leverage [OpenAPI](https://docs.nestjs.com/openapi/introduction) in your [NestJS](https://nestjs.com/) application - but also helps with GraphQL resources as well). NestJS Swagger requires input parameters in [controllers to be described through classes](https://docs.nestjs.com/openapi/types-and-parameters) because it leverages TypeScript's emitted metadata and `Reflection` to generate models/components for the OpenAPI spec. It does the same for response models/components on your controller methods.
+Generates `ConnectDTO`, `CreateDTO`, `UpdateDTO`, `DTO`, and `Entity` classes for models in your Prisma Schema. This is useful if you want to leverage [OpenAPI](https://docs.nestjs.com/openapi/introduction) in your [NestJS](https://nestjs.com/) application - but also helps with GraphQL resources as well). NestJS Swagger requires input parameters in [controllers to be described through classes](https://docs.nestjs.com/openapi/types-and-parameters) because it leverages TypeScript's emitted metadata and `Reflection` to generate models/components for the OpenAPI spec. It does the same for response models/components on your controller methods.
 
 These classes can also be used with the built-in [ValidationPipe](https://docs.nestjs.com/techniques/validation#using-the-built-in-validationpipe) and [Serialization](https://docs.nestjs.com/techniques/serialization).
 
@@ -333,6 +333,12 @@ Relation and [relation scalar](https://www.prisma.io/docs/concepts/components/pr
   - the relation field is a one-to-many or many-to-many (i.e. list) type (would return empty array if no related records found)
   - the relation was originally flagged as required (`isRequired = true`)
   - the relation field is annotated with `@DtoRelationRequired` (do this when you mark a relation as optional in PrismaSchema because you don't want (SQL) `ON DELETE CASCADE` behavior - but your logical data schema sees this relation as required)
+- default values are <ins>not</ins> added to the `@ApiProperty()` decorator
+
+### DTO
+
+The plain `DTO` class is almost the same as `Entity` with the difference that all relation fields are omitted.
+This is useful if your response is the plain entity without any (optional) relations.
 
 ## License
 
