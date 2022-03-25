@@ -70,11 +70,16 @@ export interface EntityParams extends DtoParams {
   apiExtraModels: string[];
 }
 
+export interface PlainDtoParams extends DtoParams {
+  apiExtraModels: string[];
+}
+
 export interface ModelParams {
   connect: ConnectDtoParams;
   create: CreateDtoParams;
   update: UpdateDtoParams;
   entity: EntityParams;
+  plain: PlainDtoParams;
 }
 
 export type WriteableFileSpecs = {

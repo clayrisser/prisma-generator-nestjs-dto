@@ -121,6 +121,7 @@ export const makeHelpers = ({
     className(name, createDtoPrefix, dtoSuffix);
   const updateDtoName = (name: string) =>
     className(name, updateDtoPrefix, dtoSuffix);
+  const plainDtoName = (name: string) => className(name, '', dtoSuffix);
 
   const connectDtoFilename = (name: string, withExtension = false) =>
     fileName(name, 'connect-', '.dto', withExtension);
@@ -133,6 +134,9 @@ export const makeHelpers = ({
 
   const entityFilename = (name: string, withExtension = false) =>
     fileName(name, undefined, '.entity', withExtension);
+
+  const plainDtoFilename = (name: string, withExtension = false) =>
+    fileName(name, undefined, '.dto', withExtension);
 
   const fieldType = (field: ParsedField, toInputType = false) =>
     `${
@@ -193,10 +197,12 @@ export const makeHelpers = ({
     connectDtoName,
     createDtoName,
     updateDtoName,
+    plainDtoName,
     connectDtoFilename,
     createDtoFilename,
     updateDtoFilename,
     entityFilename,
+    plainDtoFilename,
     each,
     echo,
     fieldsToDtoProps,

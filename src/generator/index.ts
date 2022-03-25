@@ -7,6 +7,7 @@ import { generateConnectDto } from './generate-connect-dto';
 import { generateCreateDto } from './generate-create-dto';
 import { generateUpdateDto } from './generate-update-dto';
 import { generateEntity } from './generate-entity';
+import { generatePlainDto } from './generate-plain-dto';
 import { DTO_IGNORE_MODEL } from './annotations';
 import { isAnnotatedWith } from './field-classifiers';
 
@@ -133,7 +134,19 @@ export const run = ({
     };
     // TODO generate model.struct.ts
 
-    return [connectDto, createDto, updateDto, entity];
+    // generate model.dto.ts
+    const plainDto = {
+      fileName: path.join(
+        model.output.dto,
+        templateHelpers.plainDtoFilename(model.name, true),
+      ),
+      content: generatePlainDto({
+        ...modelParams.plain,
+        templateHelpers,
+      }),
+    };
+
+    return [connectDto, createDto, updateDto, entity, plainDto];
   });
 
   return [...modelFiles].flat();
