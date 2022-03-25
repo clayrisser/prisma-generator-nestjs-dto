@@ -17,7 +17,10 @@ const ApiProps = [
   'maxItems',
 ];
 
-const PrismaScalarToFormat: Record<string, { type: string; format: string }> = {
+export const PrismaScalarToFormat: Record<
+  string,
+  { type: string; format: string }
+> = {
   Int: { type: 'integer', format: 'int32' },
   BigInt: { type: 'integer', format: 'int64' },
   Float: { type: 'number', format: 'float' },

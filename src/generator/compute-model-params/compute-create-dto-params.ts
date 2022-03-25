@@ -31,7 +31,11 @@ import type {
   ImportStatementParams,
   ParsedField,
 } from '../types';
-import { getDefaultValue, isAnnotatedWithDoc } from '../api-decorator';
+import {
+  getDefaultValue,
+  isAnnotatedWithDoc,
+  PrismaScalarToFormat,
+} from '../api-decorator';
 
 interface ComputeCreateDtoParamsParam {
   model: Model;
@@ -46,6 +50,7 @@ export const computeCreateDtoParams = ({
   let hasEnum = false;
   let hasDoc = false;
   let hasDefault = false;
+  let hasSpecialType = false;
   const imports: ImportStatementParams[] = [];
   const apiExtraModels: string[] = [];
   const extraClasses: string[] = [];
@@ -106,6 +111,8 @@ export const computeCreateDtoParams = ({
       overrides.isRequired = false;
     }
 
+    if (PrismaScalarToFormat[field.type]) hasSpecialType = true;
+
     if (field.kind === 'enum') hasEnum = true;
 
     if (isAnnotatedWithDoc(field)) hasDoc = true;
@@ -115,10 +122,17 @@ export const computeCreateDtoParams = ({
     return [...result, mapDMMFToParsedField(field, overrides)];
   }, [] as ParsedField[]);
 
-  if (apiExtraModels.length || hasEnum || hasDoc || hasDefault) {
+  if (
+    apiExtraModels.length ||
+    hasEnum ||
+    hasDoc ||
+    hasDefault ||
+    hasSpecialType
+  ) {
     const destruct = [];
     if (apiExtraModels.length) destruct.push('ApiExtraModels');
-    if (hasEnum || hasDoc || hasDefault) destruct.push('ApiProperty');
+    if (hasEnum || hasDoc || hasDefault || hasSpecialType)
+      destruct.push('ApiProperty');
     imports.unshift({ from: '@nestjs/swagger', destruct });
   }
 

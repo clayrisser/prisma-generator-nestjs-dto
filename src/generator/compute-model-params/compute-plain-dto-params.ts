@@ -1,23 +1,6 @@
+import { DTO_ENTITY_HIDDEN } from '../annotations';
+import { isAnnotatedWith, isRelation } from '../field-classifiers';
 import {
-  DTO_CREATE_OPTIONAL,
-  DTO_ENTITY_HIDDEN,
-  DTO_RELATION_CAN_CONNECT_ON_CREATE,
-  DTO_RELATION_CAN_CRAEATE_ON_CREATE,
-  DTO_RELATION_MODIFIERS_ON_CREATE,
-  DTO_RELATION_REQUIRED,
-} from '../annotations';
-import {
-  isAnnotatedWith,
-  isAnnotatedWithOneOf,
-  isIdWithDefaultValue,
-  isReadOnly,
-  isRelation,
-  isRequiredWithDefaultValue,
-  isUpdatedAt,
-} from '../field-classifiers';
-import {
-  concatIntoArray,
-  generateRelationInput,
   getRelationScalars,
   makeImportsFromPrismaClient,
   mapDMMFToParsedField,
@@ -32,7 +15,7 @@ import type {
   ParsedField,
   PlainDtoParams,
 } from '../types';
-import { getDefaultValue, isAnnotatedWithDoc } from '../api-decorator';
+import { isAnnotatedWithDoc, PrismaScalarToFormat } from '../api-decorator';
 
 interface ComputePlainDtoParamsParam {
   model: Model;
@@ -46,6 +29,7 @@ export const computePlainDtoParams = ({
 }: ComputePlainDtoParamsParam): PlainDtoParams => {
   let hasEnum = false;
   let hasDoc = false;
+  let hasSpecialType = false;
   const imports: ImportStatementParams[] = [];
   const apiExtraModels: string[] = [];
 
@@ -64,6 +48,8 @@ export const computePlainDtoParams = ({
     if (isRelation(field)) return result;
     if (relationScalarFieldNames.includes(name)) return result;
 
+    if (PrismaScalarToFormat[field.type]) hasSpecialType = true;
+
     if (field.kind === 'enum') hasEnum = true;
 
     if (isAnnotatedWithDoc(field)) hasDoc = true;
@@ -71,10 +57,10 @@ export const computePlainDtoParams = ({
     return [...result, mapDMMFToParsedField(field, overrides)];
   }, [] as ParsedField[]);
 
-  if (apiExtraModels.length || hasEnum || hasDoc) {
+  if (apiExtraModels.length || hasEnum || hasDoc || hasSpecialType) {
     const destruct = [];
     if (apiExtraModels.length) destruct.push('ApiExtraModels');
-    if (hasEnum || hasDoc) destruct.push('ApiProperty');
+    if (hasEnum || hasDoc || hasSpecialType) destruct.push('ApiProperty');
     imports.unshift({ from: '@nestjs/swagger', destruct });
   }
 
