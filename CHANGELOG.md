@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.8.0] - 2022-03-25
+
+### Added
+
+- generate plain `DTO` classes (same as entity classes, but without relation fields)
+
+### Changed
+
+- default values are added to the `@ApiDecorator()` only in the `CreateDTO` and `UpdateDTO` classes
+
 ## [1.7.1] - 2022-03-22
 
 ### Fixed
