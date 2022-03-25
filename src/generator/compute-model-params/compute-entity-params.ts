@@ -32,7 +32,6 @@ export const computeEntityParams = ({
 }: ComputeEntityParamsParam): EntityParams => {
   let hasEnum = false;
   let hasDoc = false;
-  let hasDefault = false;
   const imports: ImportStatementParams[] = [];
   const apiExtraModels: string[] = [];
 
@@ -118,15 +117,13 @@ export const computeEntityParams = ({
 
     if (isAnnotatedWithDoc(field)) hasDoc = true;
 
-    if (getDefaultValue(field) !== undefined) hasDefault = true;
-
     return [...result, mapDMMFToParsedField(field, overrides)];
   }, [] as ParsedField[]);
 
-  if (apiExtraModels.length || hasEnum || hasDoc || hasDefault) {
+  if (apiExtraModels.length || hasEnum || hasDoc) {
     const destruct = [];
     if (apiExtraModels.length) destruct.push('ApiExtraModels');
-    if (hasEnum || hasDoc || hasDefault) destruct.push('ApiProperty');
+    if (hasEnum || hasDoc) destruct.push('ApiProperty');
     imports.unshift({ from: '@nestjs/swagger', destruct });
   }
 

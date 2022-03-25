@@ -70,7 +70,10 @@ function encapsulateString(value: string): string {
   return /^(?!true$|false$)[^0-9\[]/.test(value) ? `'${value}'` : value;
 }
 
-export function decorateApiProperty(field: ParsedField): string {
+export function decorateApiProperty(
+  field: ParsedField,
+  includeDefault = true,
+): string {
   const properties: IProperty[] = [];
 
   for (const prop of ApiProps) {
@@ -93,7 +96,7 @@ export function decorateApiProperty(field: ParsedField): string {
   }
 
   const defaultValue = getDefaultValue(field);
-  if (defaultValue !== undefined) {
+  if (includeDefault && defaultValue !== undefined) {
     properties.push({ name: 'default', value: `${defaultValue}` });
   }
 
