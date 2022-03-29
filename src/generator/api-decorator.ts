@@ -15,6 +15,7 @@ const ApiProps = [
   'maxLength',
   'minItems',
   'maxItems',
+  'example',
 ];
 
 export const PrismaScalarToFormat: Record<
