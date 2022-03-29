@@ -18,7 +18,7 @@ These classes can also be used with the built-in [ValidationPipe](https://docs.n
 
 This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds support to enhance fields with additional schema information, e.g., description to generate a `@ApiProperty()` decorator.
 See [Schema Object annotations](#schema-object-annotations).
-Additional flags `flatResourceStructure` and `noDependencies` control the output format.
+Additional flags `flatResourceStructure`, `noDependencies`, and `outputType` control the output format.
 
 ### ToDo
 
@@ -64,6 +64,7 @@ All parameters are optional.
 - [`entitySuffix`]: (default: `""`) - phrase to suffix every `Entity` class with
 - [`fileNamingStyle`]: (default: `"camel"`) - How to name generated files. Valid choices are `"camel"`, `"pascal"`, `"kebab"` and `"snake"`.
 - [`noDependencies`]: (default: `"false"`) - Any imports and decorators that are specific to NestJS and Prisma are omitted, such that there are no references to external dependencies. This is useful if you want to generate appropriate DTOs for the frontend.
+- [`outputType`]: (default: `"class"`) - Output the DTOs as `class` or as `interface`. `interface` should only be used to generate DTOs for the frontend.
 
 ## Annotations
 
