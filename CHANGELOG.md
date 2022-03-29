@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.9.0] - 2022-03-29
+
+### Added
+
+- flag `flatResourceStructure` to flatten the subfolders if `outputToNestJsResourceStructure` is `true`
+- flag `noDependencies` to output DTOs without any imports and decorators from external dependencies (useful to generate DTOs for frontend)
+- `@example` annotation adds example to `@ApiProperty()`
+
 ## [1.8.1] - 2022-03-25
 
 ### Fixed
