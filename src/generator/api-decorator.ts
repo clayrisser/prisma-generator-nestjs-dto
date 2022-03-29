@@ -1,9 +1,4 @@
-import { ParsedField } from './types';
-
-interface IProperty {
-  name: string;
-  value: string;
-}
+import { IApiProperty, ParsedField } from './types';
 
 const ApiProps = [
   'description',
@@ -18,10 +13,7 @@ const ApiProps = [
   'example',
 ];
 
-export const PrismaScalarToFormat: Record<
-  string,
-  { type: string; format: string }
-> = {
+const PrismaScalarToFormat: Record<string, { type: string; format: string }> = {
   Int: { type: 'integer', format: 'int32' },
   BigInt: { type: 'integer', format: 'int64' },
   Float: { type: 'number', format: 'float' },
@@ -53,7 +45,10 @@ export function getDefaultValue(field: ParsedField): any {
   }
 }
 
-function extractAnnotation(field: ParsedField, prop: string): IProperty | null {
+function extractAnnotation(
+  field: ParsedField,
+  prop: string,
+): IApiProperty | null {
   const regexp = new RegExp(`@${prop}\\s+(.+)\\s*$`, 'm');
   const matches = regexp.exec(field.documentation || '');
 
@@ -74,41 +69,74 @@ function encapsulateString(value: string): string {
   return /^(?!true$|false$)[^0-9\[]/.test(value) ? `'${value}'` : value;
 }
 
-export function decorateApiProperty(
+/**
+ * Parse all types of annotation that can be decorated with `@ApiProperty()`.
+ * @param field
+ * @param include All default to `true`. Set to `false` if you want to exclude a type of annotation.
+ */
+export function parseApiProperty(
   field: ParsedField,
-  includeDefault = true,
-): string {
-  const properties: IProperty[] = [];
+  include: {
+    default?: boolean;
+    doc?: boolean;
+    enum?: boolean;
+    type?: boolean;
+  } = {},
+): boolean {
+  const incl = Object.assign(
+    {
+      default: true,
+      doc: true,
+      enum: true,
+      type: true,
+    },
+    include,
+  );
+  const properties: IApiProperty[] = [];
 
-  for (const prop of ApiProps) {
-    const property = extractAnnotation(field, prop);
-    if (property) {
-      properties.push(property);
+  if (incl.doc) {
+    for (const prop of ApiProps) {
+      const property = extractAnnotation(field, prop);
+      if (property) {
+        properties.push(property);
+      }
     }
   }
 
   const scalarFormat = PrismaScalarToFormat[field.type];
-  if (scalarFormat) {
+  if (incl.type && scalarFormat) {
     properties.push(
       { name: 'type', value: scalarFormat.type },
       { name: 'format', value: scalarFormat.format },
     );
   }
 
-  if (field.kind === 'enum') {
+  if (incl.enum && field.kind === 'enum') {
     properties.push({ name: 'enum', value: field.type });
   }
 
   const defaultValue = getDefaultValue(field);
-  if (includeDefault && defaultValue !== undefined) {
+  if (incl.default && defaultValue !== undefined) {
     properties.push({ name: 'default', value: `${defaultValue}` });
   }
 
+  if (properties.length) {
+    field.apiProperty = properties;
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Compose `@ApiProperty()` decorator.
+ */
+export function decorateApiProperty(field: ParsedField): string {
   let decorator = '';
 
-  if (properties.length) {
+  if (field.apiProperty?.length) {
     decorator += '@ApiProperty({\n';
-    properties.forEach((prop) => {
+    field.apiProperty.forEach((prop) => {
       decorator += `  ${prop.name}: ${
         prop.name === 'enum' ? prop.value : encapsulateString(prop.value)
       },\n`;

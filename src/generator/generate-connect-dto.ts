@@ -11,7 +11,7 @@ export const generateConnectDto = ({
 }: GenerateConnectDtoParam) => {
   const template = `
   export class ${t.connectDtoName(model.name)} {
-    ${t.fieldsToDtoProps(fields, true, false, true)}
+    ${t.fieldsToDtoProps(fields, true, false)}
   }
   `;
 

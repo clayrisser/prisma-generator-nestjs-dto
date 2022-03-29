@@ -15,7 +15,7 @@ import type {
   ParsedField,
   PlainDtoParams,
 } from '../types';
-import { isAnnotatedWithDoc, PrismaScalarToFormat } from '../api-decorator';
+import { parseApiProperty } from '../api-decorator';
 
 interface ComputePlainDtoParamsParam {
   model: Model;
@@ -27,9 +27,7 @@ export const computePlainDtoParams = ({
   allModels,
   templateHelpers,
 }: ComputePlainDtoParamsParam): PlainDtoParams => {
-  let hasEnum = false;
-  let hasDoc = false;
-  let hasSpecialType = false;
+  let hasApiProperty = false;
   const imports: ImportStatementParams[] = [];
   const apiExtraModels: string[] = [];
 
@@ -48,19 +46,15 @@ export const computePlainDtoParams = ({
     if (isRelation(field)) return result;
     if (relationScalarFieldNames.includes(name)) return result;
 
-    if (PrismaScalarToFormat[field.type]) hasSpecialType = true;
-
-    if (field.kind === 'enum') hasEnum = true;
-
-    if (isAnnotatedWithDoc(field)) hasDoc = true;
+    hasApiProperty = parseApiProperty(field, { default: false });
 
     return [...result, mapDMMFToParsedField(field, overrides)];
   }, [] as ParsedField[]);
 
-  if (apiExtraModels.length || hasEnum || hasDoc || hasSpecialType) {
+  if (apiExtraModels.length || hasApiProperty) {
     const destruct = [];
     if (apiExtraModels.length) destruct.push('ApiExtraModels');
-    if (hasEnum || hasDoc || hasSpecialType) destruct.push('ApiProperty');
+    if (hasApiProperty) destruct.push('ApiProperty');
     imports.unshift({ from: '@nestjs/swagger', destruct });
   }
 

@@ -22,6 +22,7 @@ export interface ParsedField {
   isNullable?: boolean;
   hasDefaultValue?: boolean;
   default?: any;
+  apiProperty?: IApiProperty[];
 }
 
 export interface ExtraModel {
@@ -88,3 +89,8 @@ export type WriteableFileSpecs = {
 };
 
 export type NamingStyle = 'snake' | 'camel' | 'pascal' | 'kebab';
+
+export interface IApiProperty {
+  name: string;
+  value: string;
+}
