@@ -36,11 +36,13 @@ interface ComputeUpdateDtoParamsParam {
   model: Model;
   allModels: Model[];
   templateHelpers: TemplateHelpers;
+  noDependencies: boolean;
 }
 export const computeUpdateDtoParams = ({
   model,
   allModels,
   templateHelpers,
+  noDependencies,
 }: ComputeUpdateDtoParamsParam): UpdateDtoParams => {
   let hasApiProperty = false;
   const imports: ImportStatementParams[] = [];
@@ -74,7 +76,8 @@ export const computeUpdateDtoParams = ({
 
       concatIntoArray(relationInputType.imports, imports);
       concatIntoArray(relationInputType.generatedClasses, extraClasses);
-      concatIntoArray(relationInputType.apiExtraModels, apiExtraModels);
+      if (!noDependencies)
+        concatIntoArray(relationInputType.apiExtraModels, apiExtraModels);
     }
     if (relationScalarFieldNames.includes(name)) return result;
 
@@ -89,7 +92,12 @@ export const computeUpdateDtoParams = ({
       if (isRequiredWithDefaultValue(field)) return result;
     }
 
-    hasApiProperty = parseApiProperty(field);
+    if (!noDependencies) hasApiProperty = parseApiProperty(field);
+
+    if (noDependencies) {
+      if (field.type === 'Json') field.type = 'Object';
+      else if (field.type === 'Decimal') field.type = 'Float';
+    }
 
     return [...result, mapDMMFToParsedField(field, overrides)];
   }, [] as ParsedField[]);

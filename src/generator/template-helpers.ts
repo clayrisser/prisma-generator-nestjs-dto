@@ -15,6 +15,7 @@ const PrismaScalarToTypeScript: Record<string, string> = {
   Json: 'Prisma.JsonValue',
   // [Working with Bytes](https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields#working-with-bytes)
   Bytes: 'Buffer',
+  Object: '{ [key: string]: any }',
 };
 
 const knownPrismaScalarTypes = Object.keys(PrismaScalarToTypeScript);

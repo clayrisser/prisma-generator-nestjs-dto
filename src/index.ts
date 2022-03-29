@@ -69,6 +69,12 @@ export const generate = (options: GeneratorOptions) => {
     );
   }
 
+  const noDependencies = stringToBoolean(
+    options.generator.config.noDependencies,
+    // using `true` as default value would be a breaking change
+    false,
+  );
+
   const results = run({
     output,
     dmmf: options.dmmf,
@@ -82,6 +88,7 @@ export const generate = (options: GeneratorOptions) => {
     entityPrefix,
     entitySuffix,
     fileNamingStyle,
+    noDependencies,
   });
 
   const indexCollections: Record<string, WriteableFileSpecs> = {};

@@ -27,6 +27,7 @@ interface RunParam {
   entityPrefix: string;
   entitySuffix: string;
   fileNamingStyle: NamingStyle;
+  noDependencies: boolean;
 }
 
 export const run = ({
@@ -39,6 +40,7 @@ export const run = ({
     outputToNestJsResourceStructure,
     flatResourceStructure,
     fileNamingStyle = 'camel',
+    noDependencies,
     ...preAndSuffixes
   } = options;
 
@@ -85,6 +87,7 @@ export const run = ({
       model,
       allModels: filteredModels,
       templateHelpers,
+      noDependencies,
     });
 
     // generate connect-model.dto.ts
