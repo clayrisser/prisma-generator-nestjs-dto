@@ -16,7 +16,9 @@ Generates `ConnectDTO`, `CreateDTO`, `UpdateDTO`, `DTO`, and `Entity` classes fo
 
 These classes can also be used with the built-in [ValidationPipe](https://docs.nestjs.com/techniques/validation#using-the-built-in-validationpipe) and [Serialization](https://docs.nestjs.com/techniques/serialization).
 
-This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds support to enhance fields with additional schema information, e.g., description to generate a `@ApiProperty()` decorator. See [Schema Object annotations](#schema-object-annotations).
+This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds support to enhance fields with additional schema information, e.g., description to generate a `@ApiProperty()` decorator.
+See [Schema Object annotations](#schema-object-annotations).
+Additional flags `flatResourceStructure` and `noDependencies` control the output format.
 
 ### ToDo
 
@@ -33,6 +35,7 @@ generator nestjsDto {
   provider                        = "prisma-generator-nestjs-dto"
   output                          = "../src/generated/nestjs-dto"
   outputToNestJsResourceStructure = "false"
+  flatResourceStructure           = "false"
   exportRelationModifierClasses   = "true"
   reExport                        = "false"
   createDtoPrefix                 = "Create"
@@ -41,6 +44,7 @@ generator nestjsDto {
   entityPrefix                    = ""
   entitySuffix                    = ""
   fileNamingStyle                 = "camel"
+  noDependencies                  = "false"
 }
 ```
 
@@ -50,6 +54,7 @@ All parameters are optional.
 
 - [`output`]: (default: `"../src/generated/nestjs-dto"`) - output path relative to your `schema.prisma` file
 - [`outputToNestJsResourceStructure`]: (default: `"false"`) - writes `dto`s and `entities` to subfolders aligned with [NestJS CRUD generator](https://docs.nestjs.com/recipes/crud-generator). Resource module name is derived from lower-cased model name in `schema.prisma`
+- [`flatResourceStructure`]: (default: `"false"`) - If `outputToNestJsResourceStructure` is `true`, subfolders `dto`s and `entities` are created within the resource folder. Setting this to `true` will flatten the hierarchy.
 - [`exportRelationModifierClasses`]: (default: `"true"`) - Should extra classes generated for relationship field operations on DTOs be exported?
 - [`reExport`]: (default: `false`) - Should an index.ts be created for every folder?
 - [`createDtoPrefix`]: (default: `"Create"`) - phrase to prefix every `CreateDTO` class with
@@ -57,7 +62,8 @@ All parameters are optional.
 - [`dtoSuffix`]: (default: `"Dto"`) - phrase to suffix every `CreateDTO` and `UpdateDTO` class with
 - [`entityPrefix`]: (default: `""`) - phrase to prefix every `Entity` class with
 - [`entitySuffix`]: (default: `""`) - phrase to suffix every `Entity` class with
-- [`fileNamingStyle`]: (default: `"camel"`) - how to name generated files. Valid choices are `"camel"`, `"pascal"`, `"kebab"` and `"snake"`.
+- [`fileNamingStyle`]: (default: `"camel"`) - How to name generated files. Valid choices are `"camel"`, `"pascal"`, `"kebab"` and `"snake"`.
+- [`noDependencies`]: (default: `"false"`) - Any imports and decorators that are specific to NestJS and Prisma are omitted, such that there are no references to external dependencies. This is useful if you want to generate appropriate DTOs for the frontend.
 
 ## Annotations
 
@@ -104,6 +110,7 @@ Currently, following schema properties are supported:
 * `maxLength`
 * `minItems`
 * `maxItems`
+* `example`
 
 Additionally, special data types are inferred and annotated as well:
 
@@ -149,16 +156,16 @@ outputToNestJsResourceStructure = "true"
 }
 
 model Question {
-id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-/// @DtoReadOnly
-createdAt DateTime @default(now())
-/// @DtoRelationRequired
-createdBy User? @relation("CreatedQuestions", fields: [createdById], references: [id])
-createdById String? @db.Uuid
-updatedAt DateTime @updatedAt
-/// @DtoRelationRequired
-updatedBy User? @relation("UpdatedQuestions", fields: [updatedById], references: [id])
-updatedById String? @db.Uuid
+    id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    /// @DtoReadOnly
+    createdAt   DateTime @default(now())
+    /// @DtoRelationRequired
+    createdBy   User? @relation("CreatedQuestions", fields: [createdById], references: [id])
+    createdById String? @db.Uuid
+    updatedAt   DateTime @updatedAt
+    /// @DtoRelationRequired
+    updatedBy   User? @relation("UpdatedQuestions", fields: [updatedById], references: [id])
+    updatedById String? @db.Uuid
 
     /// @DtoRelationRequired
     /// @DtoRelationCanConnectOnCreate

@@ -21,6 +21,7 @@ generator nestjsDto {
 
 model Product {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// @example My first product
   name        String   @db.VarChar(255)
   description String   @db.VarChar(1024)
   /// @maxItems 5
@@ -28,6 +29,7 @@ model Product {
   highlighted Boolean? @default(false)
   /// @description Number of reviews
   /// @minimum 9
+  /// @example 12
   reviewCount Int?     @default(0)
   type        ProductType
   tags        String[]
