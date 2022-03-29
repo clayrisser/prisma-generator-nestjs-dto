@@ -92,7 +92,7 @@ export const computeUpdateDtoParams = ({
       if (isRequiredWithDefaultValue(field)) return result;
     }
 
-    if (!noDependencies) hasApiProperty = parseApiProperty(field);
+    if (!noDependencies && parseApiProperty(field)) hasApiProperty = true;
 
     if (noDependencies) {
       if (field.type === 'Json') field.type = 'Object';

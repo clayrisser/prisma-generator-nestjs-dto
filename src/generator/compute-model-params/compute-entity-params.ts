@@ -114,8 +114,8 @@ export const computeEntityParams = ({
       overrides.isNullable = !isAnyRelationRequired;
     }
 
-    if (!noDependencies)
-      hasApiProperty = parseApiProperty(field, { default: false });
+    if (!noDependencies && parseApiProperty(field, { default: false }))
+      hasApiProperty = true;
 
     if (noDependencies) {
       if (field.type === 'Json') field.type = 'Object';
