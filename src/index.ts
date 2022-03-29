@@ -45,6 +45,12 @@ export const generate = (options: GeneratorOptions) => {
     false,
   );
 
+  const flatResourceStructure = stringToBoolean(
+    options.generator.config.flatResourceStructure,
+    // using `true` as default value would be a breaking change
+    false,
+  );
+
   const reExport = stringToBoolean(
     options.generator.config.reExport,
     // using `true` as default value would be a breaking change
@@ -68,6 +74,7 @@ export const generate = (options: GeneratorOptions) => {
     dmmf: options.dmmf,
     exportRelationModifierClasses,
     outputToNestJsResourceStructure,
+    flatResourceStructure,
     connectDtoPrefix,
     createDtoPrefix,
     updateDtoPrefix,

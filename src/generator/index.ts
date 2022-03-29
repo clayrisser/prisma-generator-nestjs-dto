@@ -19,6 +19,7 @@ interface RunParam {
   dmmf: DMMF.Document;
   exportRelationModifierClasses: boolean;
   outputToNestJsResourceStructure: boolean;
+  flatResourceStructure: boolean;
   connectDtoPrefix: string;
   createDtoPrefix: string;
   updateDtoPrefix: string;
@@ -36,6 +37,7 @@ export const run = ({
   const {
     exportRelationModifierClasses,
     outputToNestJsResourceStructure,
+    flatResourceStructure,
     fileNamingStyle = 'camel',
     ...preAndSuffixes
   } = options;
@@ -58,16 +60,20 @@ export const run = ({
 
   const filteredModels: Model[] = allModels
     .filter((model) => !isAnnotatedWith(model, DTO_IGNORE_MODEL))
-    // adds `output` information for each model so we can compute relative import paths
+    // adds `output` information for each model, so we can compute relative import paths
     // this assumes that NestJS resource modules (more specifically their folders on disk) are named as `transformFileNameCase(model.name)`
     .map((model) => ({
       ...model,
       output: {
         dto: outputToNestJsResourceStructure
-          ? path.join(output, transformFileNameCase(model.name), 'dto')
+          ? flatResourceStructure
+            ? path.join(output, transformFileNameCase(model.name))
+            : path.join(output, transformFileNameCase(model.name), 'dto')
           : output,
         entity: outputToNestJsResourceStructure
-          ? path.join(output, transformFileNameCase(model.name), 'entities')
+          ? flatResourceStructure
+            ? path.join(output, transformFileNameCase(model.name))
+            : path.join(output, transformFileNameCase(model.name), 'entities')
           : output,
       },
     }));
