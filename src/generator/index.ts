@@ -27,6 +27,7 @@ interface RunParam {
   entityPrefix: string;
   entitySuffix: string;
   fileNamingStyle: NamingStyle;
+  outputType: string;
   noDependencies: boolean;
 }
 
@@ -40,6 +41,7 @@ export const run = ({
     outputToNestJsResourceStructure,
     flatResourceStructure,
     fileNamingStyle = 'camel',
+    outputType,
     noDependencies,
     ...preAndSuffixes
   } = options;
@@ -56,6 +58,7 @@ export const run = ({
   const templateHelpers = makeHelpers({
     transformFileNameCase,
     transformClassNameCase: pascal,
+    outputType,
     ...preAndSuffixes,
   });
   const allModels = dmmf.datamodel.models;

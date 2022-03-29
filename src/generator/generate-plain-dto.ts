@@ -14,7 +14,7 @@ export const generatePlainDto = ({
 ${t.importStatements(imports)}
 
 ${t.if(apiExtraModels.length, t.apiExtraModels(apiExtraModels))}
-export class ${t.plainDtoName(model.name)} {
+export ${t.config.outputType} ${t.plainDtoName(model.name)} {
   ${t.fieldsToEntityProps(fields)}
 }
 `;

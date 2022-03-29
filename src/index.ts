@@ -32,6 +32,7 @@ export const generate = (options: GeneratorOptions) => {
     entityPrefix = '',
     entitySuffix = '',
     fileNamingStyle = 'camel',
+    outputType = 'class',
   } = options.generator.config;
 
   const exportRelationModifierClasses = stringToBoolean(
@@ -69,6 +70,13 @@ export const generate = (options: GeneratorOptions) => {
     );
   }
 
+  const supportedOutputTypes = ['class', 'interface'];
+  if (!supportedOutputTypes.includes(outputType)) {
+    throw new Error(
+      `'${outputType}' is not a valid output type. Valid options are 'class' and 'interface'.`,
+    );
+  }
+
   const noDependencies = stringToBoolean(
     options.generator.config.noDependencies,
     // using `true` as default value would be a breaking change
@@ -88,6 +96,7 @@ export const generate = (options: GeneratorOptions) => {
     entityPrefix,
     entitySuffix,
     fileNamingStyle,
+    outputType,
     noDependencies,
   });
 

@@ -10,7 +10,7 @@ export const generateConnectDto = ({
   templateHelpers: t,
 }: GenerateConnectDtoParam) => {
   const template = `
-  export class ${t.connectDtoName(model.name)} {
+  export ${t.config.outputType} ${t.connectDtoName(model.name)} {
     ${t.fieldsToDtoProps(fields, true, false)}
   }
   `;

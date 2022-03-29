@@ -221,7 +221,9 @@ export const generateRelationInput = ({
   const preAndPostfixedInputClassName = preAndSuffixClassName(
     originalInputClassName,
   );
-  generatedClasses.push(`class ${preAndPostfixedInputClassName} {
+  generatedClasses.push(`${
+    t.config.outputType
+  } ${preAndPostfixedInputClassName} {
     ${t.fieldsToDtoProps(
       relationInputClassProps.map((inputField) => ({
         ...inputField,

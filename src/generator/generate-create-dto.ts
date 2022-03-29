@@ -23,7 +23,7 @@ ${t.each(
 )}
 
 ${t.if(apiExtraModels.length, t.apiExtraModels(apiExtraModels))}
-export class ${t.createDtoName(model.name)} {
+export ${t.config.outputType} ${t.createDtoName(model.name)} {
   ${t.fieldsToDtoProps(fields, true)}
 }
 `;
