@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.10.0] - 2022-03-29
+
+### Added
+
+- config `outputType` to generate DTOs as `class` or as `interface`
+
 ## [1.9.1] - 2022-03-29
 
 ### Fixed
