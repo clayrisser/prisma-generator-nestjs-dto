@@ -24,13 +24,11 @@ interface ComputeEntityParamsParam {
   model: Model;
   allModels: Model[];
   templateHelpers: TemplateHelpers;
-  noDependencies: boolean;
 }
 export const computeEntityParams = ({
   model,
   allModels,
   templateHelpers,
-  noDependencies,
 }: ComputeEntityParamsParam): EntityParams => {
   let hasApiProperty = false;
   const imports: ImportStatementParams[] = [];
@@ -114,10 +112,13 @@ export const computeEntityParams = ({
       overrides.isNullable = !isAnyRelationRequired;
     }
 
-    if (!noDependencies && parseApiProperty(field, { default: false }))
+    if (
+      !templateHelpers.config.noDependencies &&
+      parseApiProperty(field, { default: false })
+    )
       hasApiProperty = true;
 
-    if (noDependencies) {
+    if (templateHelpers.config.noDependencies) {
       if (field.type === 'Json') field.type = 'Object';
       else if (field.type === 'Decimal') field.type = 'Float';
     }

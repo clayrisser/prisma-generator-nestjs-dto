@@ -59,6 +59,7 @@ export const run = ({
     transformFileNameCase,
     transformClassNameCase: pascal,
     outputType,
+    noDependencies,
     ...preAndSuffixes,
   });
   const allModels = dmmf.datamodel.models;
@@ -90,7 +91,6 @@ export const run = ({
       model,
       allModels: filteredModels,
       templateHelpers,
-      noDependencies,
     });
 
     // generate connect-model.dto.ts

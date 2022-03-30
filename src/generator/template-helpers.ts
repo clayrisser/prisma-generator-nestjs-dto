@@ -91,6 +91,7 @@ interface MakeHelpersParam {
   transformClassNameCase?: (item: string) => string;
   transformFileNameCase?: (item: string) => string;
   outputType: string;
+  noDependencies: boolean;
 }
 export const makeHelpers = ({
   connectDtoPrefix,
@@ -102,6 +103,7 @@ export const makeHelpers = ({
   transformClassNameCase = echo,
   transformFileNameCase = echo,
   outputType,
+  noDependencies,
 }: MakeHelpersParam) => {
   const className = (name: string, prefix = '', suffix = '') =>
     `${prefix}${transformClassNameCase(name)}${suffix}`;
@@ -192,6 +194,7 @@ export const makeHelpers = ({
       entityPrefix,
       entitySuffix,
       outputType,
+      noDependencies,
     },
     apiExtraModels,
     entityName,

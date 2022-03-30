@@ -11,13 +11,11 @@ interface ComputeModelParamsParam {
   model: Model;
   allModels: Model[];
   templateHelpers: TemplateHelpers;
-  noDependencies: boolean;
 }
 export const computeModelParams = ({
   model,
   allModels,
   templateHelpers,
-  noDependencies,
 }: ComputeModelParamsParam): ModelParams => ({
   // TODO find out if model needs `ConnectDTO`
   connect: computeConnectDtoParams({ model }),
@@ -25,24 +23,20 @@ export const computeModelParams = ({
     model,
     allModels, // ? should this be `allModels: models` instead
     templateHelpers,
-    noDependencies,
   }),
   update: computeUpdateDtoParams({
     model,
     allModels,
     templateHelpers,
-    noDependencies,
   }),
   entity: computeEntityParams({
     model,
     allModels,
     templateHelpers,
-    noDependencies,
   }),
   plain: computePlainDtoParams({
     model,
     allModels,
     templateHelpers,
-    noDependencies,
   }),
 });

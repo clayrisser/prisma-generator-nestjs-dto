@@ -21,13 +21,11 @@ interface ComputePlainDtoParamsParam {
   model: Model;
   allModels: Model[];
   templateHelpers: TemplateHelpers;
-  noDependencies: boolean;
 }
 export const computePlainDtoParams = ({
   model,
   allModels,
   templateHelpers,
-  noDependencies,
 }: ComputePlainDtoParamsParam): PlainDtoParams => {
   let hasApiProperty = false;
   const imports: ImportStatementParams[] = [];
@@ -48,10 +46,13 @@ export const computePlainDtoParams = ({
     if (isRelation(field)) return result;
     if (relationScalarFieldNames.includes(name)) return result;
 
-    if (!noDependencies && parseApiProperty(field, { default: false }))
+    if (
+      !templateHelpers.config.noDependencies &&
+      parseApiProperty(field, { default: false })
+    )
       hasApiProperty = true;
 
-    if (noDependencies) {
+    if (templateHelpers.config.noDependencies) {
       if (field.type === 'Json') field.type = 'Object';
       else if (field.type === 'Decimal') field.type = 'Float';
     }

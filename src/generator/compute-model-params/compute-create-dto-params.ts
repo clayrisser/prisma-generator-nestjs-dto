@@ -37,13 +37,11 @@ interface ComputeCreateDtoParamsParam {
   model: Model;
   allModels: Model[];
   templateHelpers: TemplateHelpers;
-  noDependencies: boolean;
 }
 export const computeCreateDtoParams = ({
   model,
   allModels,
   templateHelpers,
-  noDependencies,
 }: ComputeCreateDtoParamsParam): CreateDtoParams => {
   let hasApiProperty = false;
   const imports: ImportStatementParams[] = [];
@@ -88,7 +86,7 @@ export const computeCreateDtoParams = ({
       overrides.isList = false;
       concatIntoArray(relationInputType.imports, imports);
       concatIntoArray(relationInputType.generatedClasses, extraClasses);
-      if (!noDependencies)
+      if (!templateHelpers.config.noDependencies)
         concatIntoArray(relationInputType.apiExtraModels, apiExtraModels);
     }
     if (relationScalarFieldNames.includes(name)) return result;
@@ -107,9 +105,10 @@ export const computeCreateDtoParams = ({
       overrides.isRequired = false;
     }
 
-    if (!noDependencies && parseApiProperty(field)) hasApiProperty = true;
+    if (!templateHelpers.config.noDependencies && parseApiProperty(field))
+      hasApiProperty = true;
 
-    if (noDependencies) {
+    if (templateHelpers.config.noDependencies) {
       if (field.type === 'Json') field.type = 'Object';
       else if (field.type === 'Decimal') field.type = 'Float';
     }
