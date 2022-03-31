@@ -16,9 +16,11 @@ Generates `ConnectDTO`, `CreateDTO`, `UpdateDTO`, `DTO`, and `Entity` classes fo
 
 These classes can also be used with the built-in [ValidationPipe](https://docs.nestjs.com/techniques/validation#using-the-built-in-validationpipe) and [Serialization](https://docs.nestjs.com/techniques/serialization).
 
-This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds support to enhance fields with additional schema information, e.g., description to generate a `@ApiProperty()` decorator.
-See [Schema Object annotations](#schema-object-annotations).
-Additional flags `flatResourceStructure`, `noDependencies`, and `outputType` control the output format.
+This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds multiple features:
+
+* enhance fields with additional schema information, e.g., description, to generate a `@ApiProperty()` decorator (see [Schema Object annotations](#schema-object-annotations))
+* optionally add [validation decorators](#validation-decorators)
+* control output format with additional flags `flatResourceStructure`, `noDependencies`, and `outputType`
 
 ### ToDo
 
@@ -43,6 +45,7 @@ generator nestjsDto {
   dtoSuffix                       = "Dto"
   entityPrefix                    = ""
   entitySuffix                    = ""
+  classValidation                 = "false"
   fileNamingStyle                 = "camel"
   noDependencies                  = "false"
 }
@@ -63,6 +66,7 @@ All parameters are optional.
 - [`entityPrefix`]: (default: `""`) - phrase to prefix every `Entity` class with
 - [`entitySuffix`]: (default: `""`) - phrase to suffix every `Entity` class with
 - [`fileNamingStyle`]: (default: `"camel"`) - How to name generated files. Valid choices are `"camel"`, `"pascal"`, `"kebab"` and `"snake"`.
+- [`classValidation`]: (default: `"false"`) - Add validation decorators from `class-validator`. Not compatible with `noDependencies = "true"` and `outputType = "interface"`.
 - [`noDependencies`]: (default: `"false"`) - Any imports and decorators that are specific to NestJS and Prisma are omitted, such that there are no references to external dependencies. This is useful if you want to generate appropriate DTOs for the frontend.
 - [`outputType`]: (default: `"class"`) - Output the DTOs as `class` or as `interface`. `interface` should only be used to generate DTOs for the frontend.
 
@@ -121,6 +125,8 @@ Additionally, special data types are inferred and annotated as well:
 * `Decimal: { type: 'number', format: 'double' }`
 * `DateTime: { type: 'string', format: 'date-time' }`
 
+#### Example
+
 This example using `@description` and `@minimum` tags
 
 ```prisma
@@ -141,6 +147,55 @@ If a default value is specified, it gets also added to the decorator.
   default: 0
 })
 reviewCount: number | null;
+```
+
+### Validation decorators
+
+If `classValidation = "true"`, the generator will add validation decorators from [class-validator](https://github.com/typestack/class-validator) to each field of `CreateDTO` and `UpdateDTO` that can then be used in combination with the NestJS `ValidationPipe` (see [NestJS Auto-validation](https://docs.nestjs.com/techniques/validation#auto-validation)).
+
+Some decorators will be inferred from the field's attributes.
+If the field is optional, it will add `@IsOptional()`, otherwise `@IsNotEmpty()`.
+If the field is a list, it will add `@IsArray()`.
+Type validators are inferred from the field's type:
+
+* `String` &rarr; `@IsString()`
+* `Boolean` &rarr; `@IsBoolean()`
+* `Int` &rarr; `@IsInt()`
+* `BigInt` &rarr; `@IsInt()`
+* `Float:` &rarr; `@IsNumber()`
+* `Decimal:` &rarr; `@IsNumber()`
+* `DateTime` &rarr; `@IsRFC3339()`
+* `Json` &rarr; `@IsJSON()`
+
+All remaining [validation decorators](https://github.com/typestack/class-validator#validation-decorators) can be added in the comment/documentation section above the field.
+The parentheses can be omitted if not passing a value.
+
+#### Example
+
+Prisma Schema
+
+```prisma
+/// @Contains('Product')
+name        String   @db.VarChar(255)
+reviewCount Int?     @default(0)
+/// @ArrayNotEmpty
+tags        String[]
+```
+
+Generated output
+
+```typescript
+@IsNotEmpty()
+@IsString()
+@Contains('Product')
+name: string;
+@IsOptional()
+@IsInt()
+reviewCount?: number;
+@IsNotEmpty()
+@IsArray()
+@ArrayNotEmpty()
+tags: string[];
 ```
 
 ## Example
