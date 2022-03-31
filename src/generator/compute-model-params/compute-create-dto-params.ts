@@ -16,6 +16,7 @@ import {
 } from '../field-classifiers';
 import {
   concatIntoArray,
+  concatUniqueIntoArray,
   generateRelationInput,
   getRelationScalars,
   makeImportsFromPrismaClient,
@@ -30,8 +31,10 @@ import type {
   CreateDtoParams,
   ImportStatementParams,
   ParsedField,
+  IClassValidator,
 } from '../types';
 import { parseApiProperty } from '../api-decorator';
+import { parseClassValidators } from '../class-validator';
 
 interface ComputeCreateDtoParamsParam {
   model: Model;
@@ -47,6 +50,7 @@ export const computeCreateDtoParams = ({
   const imports: ImportStatementParams[] = [];
   const apiExtraModels: string[] = [];
   const extraClasses: string[] = [];
+  const classValidators: IClassValidator[] = [];
 
   const relationScalarFields = getRelationScalars(model.fields);
   const relationScalarFieldNames = Object.keys(relationScalarFields);
@@ -54,6 +58,7 @@ export const computeCreateDtoParams = ({
   const fields = model.fields.reduce((result, field) => {
     const { name } = field;
     const overrides: Partial<DMMF.Field> = {};
+    const decorators: { classValidators?: IClassValidator[] } = {};
 
     if (isReadOnly(field)) return result;
     if (isRelation(field)) {
@@ -105,6 +110,18 @@ export const computeCreateDtoParams = ({
       overrides.isRequired = false;
     }
 
+    if (templateHelpers.config.classValidation) {
+      decorators.classValidators = parseClassValidators({
+        ...field,
+        ...overrides,
+      });
+      concatUniqueIntoArray(
+        decorators.classValidators,
+        classValidators,
+        'name',
+      );
+    }
+
     if (!templateHelpers.config.noDependencies && parseApiProperty(field))
       hasApiProperty = true;
 
@@ -113,7 +130,7 @@ export const computeCreateDtoParams = ({
       else if (field.type === 'Decimal') field.type = 'Float';
     }
 
-    return [...result, mapDMMFToParsedField(field, overrides)];
+    return [...result, mapDMMFToParsedField(field, overrides, decorators)];
   }, [] as ParsedField[]);
 
   if (apiExtraModels.length || hasApiProperty) {
@@ -121,6 +138,13 @@ export const computeCreateDtoParams = ({
     if (apiExtraModels.length) destruct.push('ApiExtraModels');
     if (hasApiProperty) destruct.push('ApiProperty');
     imports.unshift({ from: '@nestjs/swagger', destruct });
+  }
+
+  if (classValidators.length) {
+    imports.unshift({
+      from: 'class-validator',
+      destruct: classValidators.map((v) => v.name).sort(),
+    });
   }
 
   const importPrismaClient = makeImportsFromPrismaClient(fields);

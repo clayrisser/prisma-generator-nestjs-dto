@@ -10,11 +10,33 @@ import { scalarToTS } from './template-helpers';
 
 import type { DMMF } from '@prisma/generator-helper';
 import type { TemplateHelpers } from './template-helpers';
-import type { ImportStatementParams, Model, ParsedField } from './types';
+import type {
+  IClassValidator,
+  ImportStatementParams,
+  Model,
+  ParsedField,
+} from './types';
 
 export const uniq = <T = any>(input: T[]): T[] => Array.from(new Set(input));
 export const concatIntoArray = <T = any>(source: T[], target: T[]) =>
   source.forEach((item) => target.push(item));
+
+export function concatUniqueIntoArray<T = any>(source: T[], target: T[]): void;
+export function concatUniqueIntoArray<T = { [key: string]: any }>(
+  source: T[],
+  target: T[],
+  prop: string,
+): void;
+export function concatUniqueIntoArray<T = any>(
+  source: T[],
+  target: T[],
+  prop?: string,
+): void {
+  const find = prop
+    ? (item: T) => !target.find((v) => (v as any)[prop] === (item as any)[prop])
+    : (item: T) => target.indexOf(item) < 0;
+  source.filter(find).forEach((item) => target.push(item));
+}
 
 export const makeImportsFromPrismaClient = (
   fields: ParsedField[],
@@ -39,9 +61,11 @@ export const makeImportsFromPrismaClient = (
 export const mapDMMFToParsedField = (
   field: DMMF.Field,
   overrides: Partial<DMMF.Field> = {},
+  decorators: { classValidators?: IClassValidator[] } = {},
 ): ParsedField => ({
   ...field,
   ...overrides,
+  ...decorators,
 });
 
 export const getRelationScalars = (

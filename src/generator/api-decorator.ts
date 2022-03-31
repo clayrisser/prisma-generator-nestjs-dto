@@ -1,3 +1,4 @@
+import { DMMF } from '@prisma/generator-helper';
 import { IApiProperty, ParsedField } from './types';
 
 const ApiProps = [
@@ -75,7 +76,7 @@ function encapsulateString(value: string): string {
  * @param include All default to `true`. Set to `false` if you want to exclude a type of annotation.
  */
 export function parseApiProperty(
-  field: ParsedField,
+  field: DMMF.Field,
   include: {
     default?: boolean;
     doc?: boolean;
@@ -94,7 +95,7 @@ export function parseApiProperty(
   );
   const properties: IApiProperty[] = [];
 
-  if (incl.doc) {
+  if (incl.doc && field.documentation) {
     for (const prop of ApiProps) {
       const property = extractAnnotation(field, prop);
       if (property) {

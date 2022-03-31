@@ -27,6 +27,7 @@ interface RunParam {
   entityPrefix: string;
   entitySuffix: string;
   fileNamingStyle: NamingStyle;
+  classValidation: boolean;
   outputType: string;
   noDependencies: boolean;
 }
@@ -41,6 +42,7 @@ export const run = ({
     outputToNestJsResourceStructure,
     flatResourceStructure,
     fileNamingStyle = 'camel',
+    classValidation,
     outputType,
     noDependencies,
     ...preAndSuffixes
@@ -58,6 +60,7 @@ export const run = ({
   const templateHelpers = makeHelpers({
     transformFileNameCase,
     transformClassNameCase: pascal,
+    classValidation,
     outputType,
     noDependencies,
     ...preAndSuffixes,

@@ -16,12 +16,14 @@ generator nestjsDto {
   entityPrefix                    = ""
   entitySuffix                    = ""
   fileNamingStyle                 = "camel"
+  classValidation                 = "false"
   noDependencies                  = "false"
   outputType                      = "class"
 }
 
 model Product {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// @Contains('Product')
   /// @example My first product
   name        String   @db.VarChar(255)
   description String   @db.VarChar(1024)
@@ -33,6 +35,7 @@ model Product {
   /// @example 12
   reviewCount Int?     @default(0)
   type        ProductType
+  /// @ArrayNotEmpty
   tags        String[]
   attributes  Json?
   score       Float?

@@ -23,6 +23,7 @@ export interface ParsedField {
   hasDefaultValue?: boolean;
   default?: any;
   apiProperty?: IApiProperty[];
+  classValidators?: IClassValidator[];
 }
 
 export interface ExtraModel {
@@ -93,4 +94,9 @@ export type NamingStyle = 'snake' | 'camel' | 'pascal' | 'kebab';
 export interface IApiProperty {
   name: string;
   value: string;
+}
+
+export interface IClassValidator {
+  name: string;
+  value?: any;
 }

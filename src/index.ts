@@ -70,6 +70,12 @@ export const generate = (options: GeneratorOptions) => {
     );
   }
 
+  const classValidation = stringToBoolean(
+    options.generator.config.classValidation,
+    // using `true` as default value would be a breaking change
+    false,
+  );
+
   const supportedOutputTypes = ['class', 'interface'];
   if (!supportedOutputTypes.includes(outputType)) {
     throw new Error(
@@ -82,6 +88,18 @@ export const generate = (options: GeneratorOptions) => {
     // using `true` as default value would be a breaking change
     false,
   );
+
+  if (classValidation && outputType !== 'class') {
+    throw new Error(
+      `To use 'validation' validation decorators, 'outputType' must be 'class'.`,
+    );
+  }
+
+  if (classValidation && noDependencies) {
+    throw new Error(
+      `To use 'validation' validation decorators, 'noDependencies' cannot be false.`,
+    );
+  }
 
   const results = run({
     output,
@@ -96,6 +114,7 @@ export const generate = (options: GeneratorOptions) => {
     entityPrefix,
     entitySuffix,
     fileNamingStyle,
+    classValidation,
     outputType,
     noDependencies,
   });

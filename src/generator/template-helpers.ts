@@ -1,5 +1,6 @@
 import { ImportStatementParams, ParsedField } from './types';
 import { decorateApiProperty } from './api-decorator';
+import { decorateClassValidators } from './class-validator';
 
 const PrismaScalarToTypeScript: Record<string, string> = {
   String: 'string',
@@ -90,6 +91,7 @@ interface MakeHelpersParam {
   entitySuffix: string;
   transformClassNameCase?: (item: string) => string;
   transformFileNameCase?: (item: string) => string;
+  classValidation: boolean;
   outputType: string;
   noDependencies: boolean;
 }
@@ -102,6 +104,7 @@ export const makeHelpers = ({
   entitySuffix,
   transformClassNameCase = echo,
   transformFileNameCase = echo,
+  classValidation,
   outputType,
   noDependencies,
 }: MakeHelpersParam) => {
@@ -157,10 +160,12 @@ export const makeHelpers = ({
     useInputTypes = false,
     forceOptional = false,
   ) =>
-    `${decorateApiProperty(field)}${field.name}${unless(
-      field.isRequired && !forceOptional,
-      '?',
-    )}: ${fieldType(field, useInputTypes)};`;
+    `${decorateApiProperty(field)}${decorateClassValidators(field)}${
+      field.name
+    }${unless(field.isRequired && !forceOptional, '?')}: ${fieldType(
+      field,
+      useInputTypes,
+    )};`;
 
   const fieldsToDtoProps = (
     fields: ParsedField[],
@@ -193,6 +198,7 @@ export const makeHelpers = ({
       dtoSuffix,
       entityPrefix,
       entitySuffix,
+      classValidation,
       outputType,
       noDependencies,
     },
