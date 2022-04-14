@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.11.1] - 2022-04-14
+
+## Fixed
+
+- field with attribute `@default("")` resulted in empty `default` value: `@Apiproperty({ default: })'`
+- parsed apiProperties were propagated to other DTOs
+
 ## [1.11.0] - 2022-03-31
 
 ### Added
