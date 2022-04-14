@@ -11,6 +11,7 @@ import { scalarToTS } from './template-helpers';
 import type { DMMF } from '@prisma/generator-helper';
 import type { TemplateHelpers } from './template-helpers';
 import type {
+  IApiProperty,
   IClassValidator,
   ImportStatementParams,
   Model,
@@ -61,7 +62,10 @@ export const makeImportsFromPrismaClient = (
 export const mapDMMFToParsedField = (
   field: DMMF.Field,
   overrides: Partial<DMMF.Field> = {},
-  decorators: { classValidators?: IClassValidator[] } = {},
+  decorators: {
+    apiProperties?: IApiProperty[];
+    classValidators?: IClassValidator[];
+  } = {},
 ): ParsedField => ({
   ...field,
   ...overrides,

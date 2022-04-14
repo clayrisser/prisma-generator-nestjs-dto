@@ -29,16 +29,20 @@ model Product {
   description String   @db.VarChar(1024)
   /// @maxItems 5
   images      Json[]   @db.Json
-  highlighted Boolean? @default(false)
+  highlighted Boolean  @default(false)
+  /// @DtoCreateOptional
   /// @description Number of reviews
   /// @minimum 9
   /// @example 12
-  reviewCount Int?     @default(0)
+  reviewCount Int      @default(0)
   type        ProductType
   /// @ArrayNotEmpty
   tags        String[]
   attributes  Json?
   score       Float?
+  /// @DtoCreateOptional
+  /// @DtoUpdateOptional
+  note        String   @default("")
   categoryId  String   @db.Uuid
   companyId   String   @db.Uuid
 

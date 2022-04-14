@@ -28,7 +28,7 @@ export function isAnnotatedWithDoc(field: ParsedField): boolean {
   );
 }
 
-export function getDefaultValue(field: ParsedField): any {
+function getDefaultValue(field: ParsedField): any {
   if (!field.hasDefaultValue) return undefined;
 
   switch (typeof field.default) {
@@ -67,7 +67,7 @@ function extractAnnotation(
  * Wrap string with single-quotes unless it's a (stringified) number, boolean, or array.
  */
 function encapsulateString(value: string): string {
-  return /^(?!true$|false$)[^0-9\[]/.test(value) ? `'${value}'` : value;
+  return /^$|^(?!true$|false$)[^0-9\[]/.test(value) ? `'${value}'` : value;
 }
 
 /**
@@ -83,7 +83,7 @@ export function parseApiProperty(
     enum?: boolean;
     type?: boolean;
   } = {},
-): boolean {
+): IApiProperty[] {
   const incl = Object.assign(
     {
       default: true,
@@ -121,12 +121,7 @@ export function parseApiProperty(
     properties.push({ name: 'default', value: `${defaultValue}` });
   }
 
-  if (properties.length) {
-    field.apiProperty = properties;
-    return true;
-  }
-
-  return false;
+  return properties;
 }
 
 /**
@@ -135,9 +130,9 @@ export function parseApiProperty(
 export function decorateApiProperty(field: ParsedField): string {
   let decorator = '';
 
-  if (field.apiProperty?.length) {
+  if (field.apiProperties?.length) {
     decorator += '@ApiProperty({\n';
-    field.apiProperty.forEach((prop) => {
+    field.apiProperties.forEach((prop) => {
       decorator += `  ${prop.name}: ${
         prop.name === 'enum' ? prop.value : encapsulateString(prop.value)
       },\n`;

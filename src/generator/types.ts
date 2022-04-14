@@ -22,7 +22,7 @@ export interface ParsedField {
   isNullable?: boolean;
   hasDefaultValue?: boolean;
   default?: any;
-  apiProperty?: IApiProperty[];
+  apiProperties?: IApiProperty[];
   classValidators?: IClassValidator[];
 }
 

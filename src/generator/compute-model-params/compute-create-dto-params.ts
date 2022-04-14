@@ -35,6 +35,7 @@ import type {
 } from '../types';
 import { parseApiProperty } from '../api-decorator';
 import { parseClassValidators } from '../class-validator';
+import { IApiProperty } from '../types';
 
 interface ComputeCreateDtoParamsParam {
   model: Model;
@@ -58,7 +59,10 @@ export const computeCreateDtoParams = ({
   const fields = model.fields.reduce((result, field) => {
     const { name } = field;
     const overrides: Partial<DMMF.Field> = {};
-    const decorators: { classValidators?: IClassValidator[] } = {};
+    const decorators: {
+      apiProperties?: IApiProperty[];
+      classValidators?: IClassValidator[];
+    } = {};
 
     if (isReadOnly(field)) return result;
     if (isRelation(field)) {
@@ -122,8 +126,10 @@ export const computeCreateDtoParams = ({
       );
     }
 
-    if (!templateHelpers.config.noDependencies && parseApiProperty(field))
-      hasApiProperty = true;
+    if (!templateHelpers.config.noDependencies) {
+      decorators.apiProperties = parseApiProperty(field);
+      if (decorators.apiProperties.length) hasApiProperty = true;
+    }
 
     if (templateHelpers.config.noDependencies) {
       if (field.type === 'Json') field.type = 'Object';

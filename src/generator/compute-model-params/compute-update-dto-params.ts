@@ -30,6 +30,7 @@ import type {
   UpdateDtoParams,
   ImportStatementParams,
   ParsedField,
+  IApiProperty,
 } from '../types';
 import { parseApiProperty } from '../api-decorator';
 import { IClassValidator } from '../types';
@@ -57,7 +58,10 @@ export const computeUpdateDtoParams = ({
   const fields = model.fields.reduce((result, field) => {
     const { name } = field;
     const overrides: Partial<DMMF.Field> = { isRequired: false };
-    const decorators: { classValidators?: IClassValidator[] } = {};
+    const decorators: {
+      apiProperties?: IApiProperty[];
+      classValidators?: IClassValidator[];
+    } = {};
 
     if (isReadOnly(field)) return result;
     if (isRelation(field)) {
@@ -107,8 +111,10 @@ export const computeUpdateDtoParams = ({
       );
     }
 
-    if (!templateHelpers.config.noDependencies && parseApiProperty(field))
-      hasApiProperty = true;
+    if (!templateHelpers.config.noDependencies) {
+      decorators.apiProperties = parseApiProperty(field);
+      if (decorators.apiProperties.length) hasApiProperty = true;
+    }
 
     if (templateHelpers.config.noDependencies) {
       if (field.type === 'Json') field.type = 'Object';

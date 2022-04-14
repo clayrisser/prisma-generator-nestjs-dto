@@ -16,6 +16,7 @@ import type {
   PlainDtoParams,
 } from '../types';
 import { parseApiProperty } from '../api-decorator';
+import { IApiProperty, IClassValidator } from '../types';
 
 interface ComputePlainDtoParamsParam {
   model: Model;
@@ -40,24 +41,24 @@ export const computePlainDtoParams = ({
       isRequired: true,
       isNullable: !field.isRequired,
     };
+    const decorators: { apiProperties?: IApiProperty[] } = {};
 
     if (isAnnotatedWith(field, DTO_ENTITY_HIDDEN)) return result;
 
     if (isRelation(field)) return result;
     if (relationScalarFieldNames.includes(name)) return result;
 
-    if (
-      !templateHelpers.config.noDependencies &&
-      parseApiProperty(field, { default: false })
-    )
-      hasApiProperty = true;
+    if (!templateHelpers.config.noDependencies) {
+      decorators.apiProperties = parseApiProperty(field, { default: false });
+      if (decorators.apiProperties.length) hasApiProperty = true;
+    }
 
     if (templateHelpers.config.noDependencies) {
       if (field.type === 'Json') field.type = 'Object';
       else if (field.type === 'Decimal') field.type = 'Float';
     }
 
-    return [...result, mapDMMFToParsedField(field, overrides)];
+    return [...result, mapDMMFToParsedField(field, overrides, decorators)];
   }, [] as ParsedField[]);
 
   if (apiExtraModels.length || hasApiProperty) {
