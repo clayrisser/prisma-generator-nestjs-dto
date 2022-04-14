@@ -132,11 +132,10 @@ This example using `@description` and `@minimum` tags
 ```prisma
 /// @description Number of reviews
 /// @minimum 9
-reviewCount Int?     @default(0)
+reviewCount Int     @default(0)
 ```
 
 will generate `@ApiProperty()` decorator with `description` and `minimum` as properties as well as `type` and `format` to specify the data type.
-If a default value is specified, it gets also added to the decorator. 
 
 ```typescript
 @ApiProperty({
@@ -144,10 +143,13 @@ If a default value is specified, it gets also added to the decorator.
   minimum: 9,
   type: 'integer',
   format: 'int32',
-  default: 0
 })
-reviewCount: number | null;
+reviewCount: number;
 ```
+
+Default values are added in `CreateDTO` and `UpdateDTO`.
+However, a field with a `@default()` attribute is hidden by default  in `CreateDTO` and `UpdateDTO`,
+hence requires `@DtoCreateOptional` and/or `@DtoUpdateOptional` to be present.
 
 ### Validation decorators
 
@@ -177,9 +179,10 @@ Prisma Schema
 ```prisma
 /// @Contains('Product')
 name        String   @db.VarChar(255)
-reviewCount Int?     @default(0)
+reviewCount Int      @default(0)
 /// @ArrayNotEmpty
 tags        String[]
+score       Float?
 ```
 
 Generated output
@@ -196,6 +199,9 @@ reviewCount?: number;
 @IsArray()
 @ArrayNotEmpty()
 tags: string[];
+@IsOptional()
+@IsNumber()
+score?: number;
 ```
 
 ## Example
