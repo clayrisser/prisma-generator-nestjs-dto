@@ -67,7 +67,9 @@ function extractAnnotation(
  * Wrap string with single-quotes unless it's a (stringified) number, boolean, or array.
  */
 function encapsulateString(value: string): string {
-  return /^$|^(?!true$|false$)[^0-9\[]/.test(value) ? `'${value}'` : value;
+  return /^$|^(?!true$|false$)[^0-9\[]/.test(value)
+    ? `'${value.replaceAll(/'/g, "\\'")}'`
+    : value;
 }
 
 /**

@@ -24,6 +24,7 @@ generator nestjsDto {
 model Product {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   /// @Contains('Product')
+  /// @description Project's name
   /// @example My first product
   name        String   @db.VarChar(255)
   description String   @db.VarChar(1024)
