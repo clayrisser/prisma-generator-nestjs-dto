@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.11.2] - 2022-04-20
+
+# Fixed
+
+- escape aposthrophe `'` with `\'`, otherwise string generation breaks
+
 ## [1.11.1] - 2022-04-14
 
 ## Fixed
