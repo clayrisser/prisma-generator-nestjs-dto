@@ -5,15 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.11.3] - 2022-05-02
+
+### Fixed
+
+- if entity prefix/suffix is specified, relation input DTOs are named incorrectly (occurs if tags like @DtoRelationCanConnectOnCreate are used)
+
 ## [1.11.2] - 2022-04-20
 
-# Fixed
+### Fixed
 
 - escape aposthrophe `'` with `\'`, otherwise string generation breaks
 
 ## [1.11.1] - 2022-04-14
 
-## Fixed
+### Fixed
 
 - field with attribute `@default("")` resulted in empty `default` value: `@Apiproperty({ default: })'`
 - parsed apiProperties were propagated to other DTOs
