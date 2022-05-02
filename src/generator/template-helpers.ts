@@ -122,7 +122,9 @@ export const makeHelpers = ({
     )}`;
 
   const entityName = (name: string) =>
-    className(name, entityPrefix, entitySuffix);
+    /dto$/i.test(name)
+      ? className(name, '', '')
+      : className(name, entityPrefix, entitySuffix);
   const connectDtoName = (name: string) =>
     className(name, connectDtoPrefix, dtoSuffix);
   const createDtoName = (name: string) =>

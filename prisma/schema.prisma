@@ -14,7 +14,7 @@ generator nestjsDto {
   updateDtoPrefix                 = "Update"
   dtoSuffix                       = "Dto"
   entityPrefix                    = ""
-  entitySuffix                    = ""
+  entitySuffix                    = "Entity"
   fileNamingStyle                 = "camel"
   classValidation                 = "false"
   noDependencies                  = "false"
