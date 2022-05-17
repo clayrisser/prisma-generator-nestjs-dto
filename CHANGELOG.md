@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.11.4] - 2022-05-17
+
+### Fixed
+
+- removed class validator `@IsJSON()` from `CreateDTO` and `UpdateDTO` for fields with `Json` type, because request body is already parsed and the respective property is not a JSON string anymore
+
 ## [1.11.3] - 2022-05-02
 
 ### Fixed
