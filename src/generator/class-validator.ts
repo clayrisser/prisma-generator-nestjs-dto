@@ -105,7 +105,7 @@ const PrismaScalarToValidator: Record<string, IClassValidator> = {
   Float: { name: 'IsNumber' },
   Decimal: { name: 'IsNumber' },
   DateTime: { name: 'IsRFC3339' },
-  Json: { name: 'IsJSON' },
+  // Json: { name: 'IsJSON' },
 };
 
 function scalarToValidator(scalar: string): IClassValidator | undefined {
