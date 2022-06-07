@@ -99,4 +99,5 @@ export interface IApiProperty {
 export interface IClassValidator {
   name: string;
   value?: any;
+  transformTo?: string;
 }

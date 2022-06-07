@@ -16,7 +16,7 @@ generator nestjsDto {
   entityPrefix                    = ""
   entitySuffix                    = "Entity"
   fileNamingStyle                 = "camel"
-  classValidation                 = "false"
+  classValidation                 = "true"
   noDependencies                  = "false"
   outputType                      = "class"
 }
@@ -35,12 +35,13 @@ model Product {
   /// @description Number of reviews
   /// @minimum 9
   /// @example 12
+  /// @Max(10)
   reviewCount Int      @default(0)
   type        ProductType
   /// @ArrayNotEmpty
   tags        String[]
   attributes  Json?
-  score       Float?
+  score       Decimal?
   /// @DtoCreateOptional
   /// @DtoUpdateOptional
   note        String   @default("")
