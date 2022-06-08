@@ -1,4 +1,5 @@
 import {
+  DTO_RELATION_AS_PROPERTY_ON_CREATE,
   DTO_RELATION_CAN_CONNECT_ON_UPDATE,
   DTO_RELATION_CAN_CRAEATE_ON_UPDATE,
   DTO_RELATION_MODIFIERS_ON_UPDATE,
@@ -75,6 +76,7 @@ export const computeUpdateDtoParams = ({
         templateHelpers,
         preAndSuffixClassName: templateHelpers.updateDtoName,
         canCreateAnnotation: DTO_RELATION_CAN_CRAEATE_ON_UPDATE,
+        canCreateAsPropertyAnnotation: DTO_RELATION_AS_PROPERTY_ON_CREATE,
         canConnectAnnotation: DTO_RELATION_CAN_CONNECT_ON_UPDATE,
       });
 

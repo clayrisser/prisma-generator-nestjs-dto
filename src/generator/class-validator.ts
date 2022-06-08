@@ -144,11 +144,20 @@ export function parseClassValidators(field: DMMF.Field): IClassValidator[] {
 
   if (field.isList) {
     validators.push({ name: 'IsArray' });
+    if (field.kind === 'object') {
+      validators.push({ name: 'ValidateNested', value: '{ each: true }' });
+    }
   } else {
     const typeValidator = scalarToValidator(field.type);
     if (typeValidator) {
       validators.push(typeValidator);
     }
+    if (field.kind === 'object') {
+      validators.push({ name: 'ValidateNested' });
+    }
+  }
+  if (field.kind === 'object') {
+    validators.push({ name: 'Type', value: `()=>${field.type}` });
   }
 
   if (field.documentation) {
@@ -174,8 +183,7 @@ export function decorateClassValidators(field: ParsedField): string {
   field.classValidators.forEach((prop) => {
     output += `@${prop.name}(${prop.value ? prop.value : ''})\n${when(
       prop.transformTo,
-      `Type(()=>${prop.transformTo})\n`,
-      '',
+      `@Type(()=>${prop.transformTo})\n`,
     )}`;
   });
 

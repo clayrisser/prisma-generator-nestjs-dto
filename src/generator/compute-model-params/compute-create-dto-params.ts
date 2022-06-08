@@ -1,7 +1,8 @@
 import {
   DTO_CREATE_OPTIONAL,
+  DTO_RELATION_AS_PROPERTY_ON_CREATE,
   DTO_RELATION_CAN_CONNECT_ON_CREATE,
-  DTO_RELATION_CAN_CRAEATE_ON_CREATE,
+  DTO_RELATION_CAN_CREATE_ON_CREATE,
   DTO_RELATION_MODIFIERS_ON_CREATE,
   DTO_RELATION_REQUIRED,
 } from '../annotations';
@@ -75,7 +76,8 @@ export const computeCreateDtoParams = ({
         allModels,
         templateHelpers,
         preAndSuffixClassName: templateHelpers.createDtoName,
-        canCreateAnnotation: DTO_RELATION_CAN_CRAEATE_ON_CREATE,
+        canCreateAnnotation: DTO_RELATION_CAN_CREATE_ON_CREATE,
+        canCreateAsPropertyAnnotation: DTO_RELATION_AS_PROPERTY_ON_CREATE,
         canConnectAnnotation: DTO_RELATION_CAN_CONNECT_ON_CREATE,
       });
 
@@ -90,9 +92,12 @@ export const computeCreateDtoParams = ({
       if (field.isList) overrides.isRequired = false;
 
       overrides.type = relationInputType.type;
-      // since relation input field types are translated to something like { connect: Foo[] }, the field type itself is not a list anymore.
-      // You provide list input in the nested `connect` or `create` properties.
-      overrides.isList = false;
+      if (!isAnnotatedWith(field, DTO_RELATION_AS_PROPERTY_ON_CREATE)) {
+        // since relation input field types are translated to something like { connect: Foo[] }, the field type itself is not a list anymore.
+        // You provide list input in the nested `connect` or `create` properties.
+        overrides.isList = false;
+      }
+
       concatIntoArray(relationInputType.imports, imports);
       concatIntoArray(relationInputType.generatedClasses, extraClasses);
       if (!templateHelpers.config.noDependencies)

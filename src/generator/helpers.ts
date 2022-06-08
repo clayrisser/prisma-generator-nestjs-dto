@@ -168,6 +168,7 @@ interface GenerateRelationInputParam {
     | TemplateHelpers['createDtoName']
     | TemplateHelpers['updateDtoName'];
   canCreateAnnotation: RegExp;
+  canCreateAsPropertyAnnotation: RegExp;
   canConnectAnnotation: RegExp;
 }
 export const generateRelationInput = ({
@@ -177,6 +178,7 @@ export const generateRelationInput = ({
   templateHelpers: t,
   preAndSuffixClassName,
   canCreateAnnotation,
+  canCreateAsPropertyAnnotation,
   canConnectAnnotation,
 }: GenerateRelationInputParam) => {
   const relationInputClassProps: Array<Pick<ParsedField, 'name' | 'type'>> = [];
@@ -209,6 +211,33 @@ export const generateRelationInput = ({
       name: 'create',
       type: preAndPostfixedName,
     });
+  }
+
+  if (isAnnotatedWith(field, canCreateAsPropertyAnnotation)) {
+    const preAndPostfixedName = t.createDtoName(field.type);
+    apiExtraModels.push(preAndPostfixedName);
+    const modelToImportFrom = allModels.find(({ name }) => name === field.type);
+
+    if (!modelToImportFrom)
+      throw new Error(
+        `related model '${field.type}' for '${model.name}.${field.name}' not found`,
+      );
+
+    imports.push({
+      from: slash(
+        `${getRelativePath(model.output.dto, modelToImportFrom.output.dto)}${
+          path.sep
+        }${t.createDtoFilename(field.type)}`,
+      ),
+      destruct: [preAndPostfixedName],
+    });
+
+    return {
+      type: preAndPostfixedName,
+      imports,
+      generatedClasses,
+      apiExtraModels,
+    };
   }
 
   if (isAnnotatedWith(field, canConnectAnnotation)) {

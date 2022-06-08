@@ -100,4 +100,5 @@ export interface IClassValidator {
   name: string;
   value?: any;
   transformTo?: string;
+  validateNested?: boolean;
 }

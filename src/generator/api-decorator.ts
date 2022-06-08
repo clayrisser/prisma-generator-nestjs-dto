@@ -3,15 +3,15 @@ import { IApiProperty, ParsedField } from './types';
 
 const ApiProps = [
   'description',
-  'minimum',
-  'maximum',
-  'exclusiveMinimum',
-  'exclusiveMaximum',
-  'minLength',
-  'maxLength',
-  'minItems',
-  'maxItems',
   'example',
+  'exclusiveMaximum',
+  'exclusiveMinimum',
+  'maximum',
+  'maxItems',
+  'maxLength',
+  'minimum',
+  'minItems',
+  'minLength',
 ];
 
 const PrismaScalarToFormat: Record<string, { type: string; format: string }> = {

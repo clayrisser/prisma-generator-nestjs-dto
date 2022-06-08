@@ -77,6 +77,8 @@ model Category {
 
 model Company {
   id      String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// @DtoRelationAsPropertyOnCreate
+  /// @IsRequired
   Product Product[]
 }
 
