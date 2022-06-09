@@ -18,8 +18,9 @@ These classes can also be used with the built-in [ValidationPipe](https://docs.n
 
 This is a fork of [@brakebein/prisma-generator-nestjs-dto](https://github.com/Brakebein/prisma-generator-nestjs-dto) and adds multiple features:
 
-* optionally add [type transforming decorators](#validation-decorators)
-* add support for `enum` handling
+* add @DtoRelationAsPropertyOnCreate: optionally treat relations as class property in Create dto, and add validation(transformation) decorators.
+* optionally add type transform operators for Decimals and object properties.
+* auto add none docorator docs as `@ApiProperty()` description.
 
 This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds multiple features:
 
