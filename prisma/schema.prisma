@@ -37,7 +37,7 @@ model Product {
   /// @example 12
   /// @Max(10)
   reviewCount Int      @default(0)
-  type        ProductType
+  type        ProductType /// 产品类型
   /// @ArrayNotEmpty
   tags        String[]
   attributes  Json?

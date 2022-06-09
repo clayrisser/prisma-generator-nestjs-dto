@@ -104,6 +104,15 @@ export function parseApiProperty(
         properties.push(property);
       }
     }
+    if (!properties.some((p) => p.name === 'description')) {
+      const doc_ = field.documentation.replace(/^\s*@.*$\n/gm, '');
+      if (doc_.length > 0) {
+        properties.push({
+          name: 'description',
+          value: doc_,
+        });
+      }
+    }
   }
 
   const scalarFormat = PrismaScalarToFormat[field.type];
