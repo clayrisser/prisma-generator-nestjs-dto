@@ -42,11 +42,13 @@ interface ComputeCreateDtoParamsParam {
   model: Model;
   allModels: Model[];
   templateHelpers: TemplateHelpers;
+  dmmf: DMMF.Document;
 }
 export const computeCreateDtoParams = ({
   model,
   allModels,
   templateHelpers,
+  dmmf,
 }: ComputeCreateDtoParamsParam): CreateDtoParams => {
   let hasApiProperty = false;
   const imports: ImportStatementParams[] = [];
@@ -123,7 +125,9 @@ export const computeCreateDtoParams = ({
       decorators.classValidators = parseClassValidators({
         ...field,
         ...overrides,
-      });
+        },
+        dmmf,
+      );
       concatUniqueIntoArray(
         decorators.classValidators,
         classValidators,

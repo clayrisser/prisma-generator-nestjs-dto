@@ -84,6 +84,8 @@ model Company {
 }
 
 enum ProductType {
+  /// 数字化
   digital
+  /// 模拟化
   analogue
 }
