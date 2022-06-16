@@ -169,6 +169,10 @@ export function parseClassValidators(field: DMMF.Field): IClassValidator[] {
     }
   }
 
+  if (field.kind === 'enum') {
+    validators.push({ name: 'IsIn', value: JSON.stringify(field.type) });
+  }
+
   return validators;
 }
 

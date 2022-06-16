@@ -31,6 +31,7 @@ model Product {
   /// @maxItems 5
   images      Json[]   @db.Json
   highlighted Boolean  @default(false)
+
   /// @DtoCreateOptional
   /// @description Number of reviews
   /// @minimum 9
