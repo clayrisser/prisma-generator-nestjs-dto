@@ -104,9 +104,10 @@ export const computeUpdateDtoParams = ({
     }
 
     if (templateHelpers.config.classValidation) {
-      decorators.classValidators = parseClassValidators({
-        ...field,
-        ...overrides,
+      decorators.classValidators = parseClassValidators(
+        {
+          ...field,
+          ...overrides,
         },
         dmmf,
       );

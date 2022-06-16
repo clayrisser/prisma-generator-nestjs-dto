@@ -8,7 +8,7 @@ import { generateCreateDto } from './generate-create-dto';
 import { generateUpdateDto } from './generate-update-dto';
 import { generateEntity } from './generate-entity';
 import { generatePlainDto } from './generate-plain-dto';
-import { DTO_IGNORE_MODEL } from './annotations';
+import { DTO_EXPLICIT_GENERATE, DTO_IGNORE_MODEL } from './annotations';
 import { isAnnotatedWith } from './field-classifiers';
 
 import type { DMMF } from '@prisma/generator-helper';
@@ -30,6 +30,7 @@ interface RunParam {
   classValidation: boolean;
   outputType: string;
   noDependencies: boolean;
+  explicitGeneration: boolean;
 }
 
 export const run = ({
@@ -45,6 +46,7 @@ export const run = ({
     classValidation,
     outputType,
     noDependencies,
+    explicitGeneration = false,
     ...preAndSuffixes
   } = options;
 
@@ -68,7 +70,11 @@ export const run = ({
   const allModels = dmmf.datamodel.models;
 
   const filteredModels: Model[] = allModels
-    .filter((model) => !isAnnotatedWith(model, DTO_IGNORE_MODEL))
+    .filter((model) =>
+      explicitGeneration
+        ? isAnnotatedWith(model, DTO_EXPLICIT_GENERATE)
+        : !isAnnotatedWith(model, DTO_IGNORE_MODEL),
+    )
     // adds `output` information for each model, so we can compute relative import paths
     // this assumes that NestJS resource modules (more specifically their folders on disk) are named as `transformFileNameCase(model.name)`
     .map((model) => ({

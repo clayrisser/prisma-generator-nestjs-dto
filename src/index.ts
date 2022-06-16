@@ -40,6 +40,11 @@ export const generate = (options: GeneratorOptions) => {
     true,
   );
 
+  const explicitGeneration = stringToBoolean(
+    options.generator.config.explicitGeneration,
+    false,
+  );
+  
   const outputToNestJsResourceStructure = stringToBoolean(
     options.generator.config.outputToNestJsResourceStructure,
     // using `true` as default value would be a breaking change
@@ -117,6 +122,7 @@ export const generate = (options: GeneratorOptions) => {
     classValidation,
     outputType,
     noDependencies,
+    explicitGeneration,
   });
 
   const indexCollections: Record<string, WriteableFileSpecs> = {};
