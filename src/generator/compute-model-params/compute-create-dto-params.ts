@@ -161,6 +161,10 @@ export const computeCreateDtoParams = ({
       from: 'class-validator',
       destruct: classValidators.map((v) => v.name).sort(),
     });
+    imports.unshift({
+      from: 'class-transformer',
+      destruct: ['Type'],
+    });
   }
 
   const importPrismaClient = makeImportsFromPrismaClient(fields);

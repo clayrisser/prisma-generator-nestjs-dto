@@ -19,7 +19,6 @@ generator nestjsDto {
   classValidation                 = "true"
   noDependencies                  = "false"
   outputType                      = "class"
-  explicitGeneration             = "true"
 }
 
 model Product {
