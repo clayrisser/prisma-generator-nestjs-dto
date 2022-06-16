@@ -133,7 +133,10 @@ function extractValidator(
 /**
  * Parse all types of class validators.
  */
-export function parseClassValidators(field: DMMF.Field): IClassValidator[] {
+export function parseClassValidators(
+  field: DMMF.Field,
+  dmmf: DMMF.Document,
+): IClassValidator[] {
   const validators: IClassValidator[] = [];
 
   if (field.isRequired) {
@@ -170,7 +173,11 @@ export function parseClassValidators(field: DMMF.Field): IClassValidator[] {
   }
 
   if (field.kind === 'enum') {
-    validators.push({ name: 'IsIn', value: JSON.stringify(field.type) });
+    const enumtype = dmmf.datamodel.enums.find((x) => x.name === field.type);
+    const evalue = enumtype?.values.map((x) => {
+      return x.name;
+    });
+    validators.push({ name: 'IsIn', value: JSON.stringify(evalue) });
   }
 
   return validators;

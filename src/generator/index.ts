@@ -94,6 +94,7 @@ export const run = ({
       model,
       allModels: filteredModels,
       templateHelpers,
+      dmmf,
     });
 
     // generate connect-model.dto.ts

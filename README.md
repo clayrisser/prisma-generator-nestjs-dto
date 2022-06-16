@@ -20,7 +20,8 @@ This is a fork of [@brakebein/prisma-generator-nestjs-dto](https://github.com/Br
 
 * add @DtoRelationAsPropertyOnCreate: optionally treat relations as class property in Create dto, and add validation(transformation) decorators.
 * optionally add type transform operators for Decimals and object properties.
-* auto add none docorator docs as `@ApiProperty()` description.
+* auto add none decorator docs as `@ApiProperty()` description.
+* add validators for enum values
 
 This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds multiple features:
 
@@ -28,9 +29,6 @@ This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/veg
 * optionally add [validation decorators](#validation-decorators)
 * control output format with additional flags `flatResourceStructure`, `noDependencies`, and `outputType`
 
-### ToDo
-
-- [ ] fix `enum` handling
 
 ## Usage?
 

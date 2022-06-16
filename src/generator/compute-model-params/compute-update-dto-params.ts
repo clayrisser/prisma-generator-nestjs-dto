@@ -41,11 +41,13 @@ interface ComputeUpdateDtoParamsParam {
   model: Model;
   allModels: Model[];
   templateHelpers: TemplateHelpers;
+  dmmf: DMMF.Document;
 }
 export const computeUpdateDtoParams = ({
   model,
   allModels,
   templateHelpers,
+  dmmf,
 }: ComputeUpdateDtoParamsParam): UpdateDtoParams => {
   let hasApiProperty = false;
   const imports: ImportStatementParams[] = [];
@@ -105,7 +107,9 @@ export const computeUpdateDtoParams = ({
       decorators.classValidators = parseClassValidators({
         ...field,
         ...overrides,
-      });
+        },
+        dmmf,
+      );
       concatUniqueIntoArray(
         decorators.classValidators,
         classValidators,
