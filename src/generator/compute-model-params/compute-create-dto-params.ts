@@ -99,6 +99,7 @@ export const computeCreateDtoParams = ({
         // You provide list input in the nested `connect` or `create` properties.
         overrides.isList = false;
       }
+      
 
       concatIntoArray(relationInputType.imports, imports);
       concatIntoArray(relationInputType.generatedClasses, extraClasses);
@@ -153,13 +154,18 @@ export const computeCreateDtoParams = ({
     const destruct = [];
     if (apiExtraModels.length) destruct.push('ApiExtraModels');
     if (hasApiProperty) destruct.push('ApiProperty');
+    destruct.push('getSchemaPath');
     imports.unshift({ from: '@nestjs/swagger', destruct });
   }
 
   if (classValidators.length) {
     imports.unshift({
       from: 'class-validator',
-      destruct: classValidators.map((v) => v.name).sort(),
+      destruct: classValidators
+        .map((v) => {
+          return v.name == 'Type' ? '' : v.name;
+        })
+        .sort(),
     });
     imports.unshift({
       from: 'class-transformer',

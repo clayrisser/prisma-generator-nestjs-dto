@@ -32,7 +32,9 @@ interface RunParam {
   noDependencies: boolean;
   explicitGeneration: boolean;
 }
+let theHelper = null;
 
+export { theHelper };
 export const run = ({
   output,
   dmmf,
@@ -67,6 +69,7 @@ export const run = ({
     noDependencies,
     ...preAndSuffixes,
   });
+  theHelper = templateHelpers;
   const allModels = dmmf.datamodel.models;
 
   const filteredModels: Model[] = allModels

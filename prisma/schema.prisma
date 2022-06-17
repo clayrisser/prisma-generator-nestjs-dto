@@ -67,6 +67,9 @@ model Product {
   /// @DtoUpdateOptional
   updatedAt DateTime @updatedAt @db.Timestamptz(6)
 
+  /// @oneOf ["Category", "Company"]
+  data Json?
+
   @@map("products")
 }
 
