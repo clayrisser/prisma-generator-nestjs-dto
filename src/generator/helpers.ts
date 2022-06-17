@@ -2,6 +2,7 @@ import path from 'node:path';
 import slash from 'slash';
 import {
   isAnnotatedWith,
+  isAnnotatedWithOneOf,
   isId,
   isRelation,
   isUnique,
@@ -17,6 +18,7 @@ import type {
   Model,
   ParsedField,
 } from './types';
+import { extractAnnotation, isAnnotatedWithDoc } from './api-decorator';
 
 export const uniq = <T = any>(input: T[]): T[] => Array.from(new Set(input));
 export const concatIntoArray = <T = any>(source: T[], target: T[]) =>
@@ -238,6 +240,30 @@ export const generateRelationInput = ({
       generatedClasses,
       apiExtraModels,
     };
+  }
+
+  const classes = extractAnnotation(field, 'oneOf');
+  if (classes) {
+    const cls = JSON.parse(classes.value);
+    cls.forEach((clsName: string) => {
+      const preAndPostfixedName = t.createDtoName(clsName);
+      apiExtraModels.push(preAndPostfixedName);
+      const modelToImportFrom = allModels.find(({ name }) => name === clsName);
+
+      if (!modelToImportFrom)
+        throw new Error(
+          `related model '${field.type}' for '${model.name}.${field.name}' not found`,
+        );
+
+      imports.push({
+        from: slash(
+          `${getRelativePath(model.output.dto, modelToImportFrom.output.dto)}${
+            path.sep
+          }${t.connectDtoFilename(field.type)}`,
+        ),
+        destruct: [preAndPostfixedName],
+      });
+    });
   }
 
   if (isAnnotatedWith(field, canConnectAnnotation)) {

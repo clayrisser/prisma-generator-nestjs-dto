@@ -1,4 +1,6 @@
 import { DMMF } from '@prisma/generator-helper';
+import { theHelper } from '.';
+import { each, TemplateHelpers } from './template-helpers';
 import { IApiProperty, ParsedField } from './types';
 
 const ApiProps = [
@@ -12,6 +14,7 @@ const ApiProps = [
   'minimum',
   'minItems',
   'minLength',
+  'oneOf',
 ];
 
 const PrismaScalarToFormat: Record<string, { type: string; format: string }> = {
@@ -46,7 +49,7 @@ function getDefaultValue(field: ParsedField): any {
   }
 }
 
-function extractAnnotation(
+export function extractAnnotation(
   field: ParsedField,
   prop: string,
 ): IApiProperty | null {
@@ -101,15 +104,26 @@ export function parseApiProperty(
     for (const prop of ApiProps) {
       const property = extractAnnotation(field, prop);
       if (property) {
+        if (property.name === 'oneOf') {
+          const cls = JSON.parse(property.value);
+          property.value = `[${each(
+            cls,
+            (x: string) =>
+              `{ $ref: getSchemaPath(${(
+                theHelper as TemplateHelpers
+              ).createDtoName(x)}) },`,
+          )}]`;
+        }
         properties.push(property);
       }
     }
     if (!properties.some((p) => p.name === 'description')) {
-      const doc_ = field.documentation.replace(/^\s*@.*$\n/gm, '');
-      if (doc_.length > 0) {
+      const doc_ = field.documentation.replace(/^\s*@.*$/gm, '');
+      const d = doc_.trim();
+      if (d.length > 0) {
         properties.push({
           name: 'description',
-          value: doc_,
+          value: d,
         });
       }
     }
@@ -145,7 +159,9 @@ export function decorateApiProperty(field: ParsedField): string {
     decorator += '@ApiProperty({\n';
     field.apiProperties.forEach((prop) => {
       decorator += `  ${prop.name}: ${
-        prop.name === 'enum' ? prop.value : encapsulateString(prop.value)
+        prop.name === 'enum' || prop.name === 'oneOf'
+          ? prop.value
+          : encapsulateString(prop.value)
       },\n`;
     });
     decorator += '})\n';
