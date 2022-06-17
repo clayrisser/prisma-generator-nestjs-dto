@@ -7,7 +7,6 @@ export const isAnnotatedWith = (
   annotation: RegExp,
 ): boolean => {
   const { documentation = '' } = instance;
-  logger.info(documentation + ':' + annotation.source);
   return annotation.test(documentation);
 };
 

@@ -109,9 +109,7 @@ export function parseApiProperty(
           property.value = `[${each(
             cls,
             (x: string) =>
-              `{ $ref: getSchemaPath(${(
-                theHelper as TemplateHelpers
-              ).createDtoName(x)}) },`,
+              `{ $ref: getSchemaPath(${theHelper.createDtoName(x)}) },`,
           )}]`;
         }
         properties.push(property);

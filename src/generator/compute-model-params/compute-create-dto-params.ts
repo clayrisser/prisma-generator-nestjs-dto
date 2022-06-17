@@ -163,8 +163,9 @@ export const computeCreateDtoParams = ({
       from: 'class-validator',
       destruct: classValidators
         .map((v) => {
-          return v.name == 'Type' ? '' : v.name;
+          return v.name;
         })
+        .filter((v) => v != 'Type')
         .sort(),
     });
     imports.unshift({

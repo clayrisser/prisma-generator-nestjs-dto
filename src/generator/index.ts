@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { camel, pascal, kebab, snake } from 'case';
 import { logger } from '@prisma/sdk';
-import { makeHelpers } from './template-helpers';
+import { makeHelpers, TemplateHelpers } from './template-helpers';
 import { computeModelParams } from './compute-model-params';
 import { generateConnectDto } from './generate-connect-dto';
 import { generateCreateDto } from './generate-create-dto';
@@ -32,7 +32,7 @@ interface RunParam {
   noDependencies: boolean;
   explicitGeneration: boolean;
 }
-let theHelper = null;
+let theHelper: TemplateHelpers;
 
 export { theHelper };
 export const run = ({
@@ -97,7 +97,6 @@ export const run = ({
     }));
 
   const modelFiles = filteredModels.map((model) => {
-    logger.info(`Processing Model ${model.name}`);
 
     const modelParams = computeModelParams({
       model,

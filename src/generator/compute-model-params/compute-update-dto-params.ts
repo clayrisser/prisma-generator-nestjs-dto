@@ -141,7 +141,10 @@ export const computeUpdateDtoParams = ({
   if (classValidators.length) {
     imports.unshift({
       from: 'class-validator',
-      destruct: classValidators.map((v) => v.name).sort(),
+      destruct: classValidators
+        .map((v) => v.name)
+        .filter((v) => v != 'Type')
+        .sort(),
     });
     imports.unshift({
       from: 'class-transformer',

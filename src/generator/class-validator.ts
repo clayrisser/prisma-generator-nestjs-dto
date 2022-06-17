@@ -14,6 +14,7 @@ const availableValidators = [
   'Equals',
   'IsAlpha',
   'IsAlphaNumeric',
+  'IsArray',
   'IsAscii',
   'IsBase32',
   'IsBase64',
