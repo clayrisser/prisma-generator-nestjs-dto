@@ -5,6 +5,8 @@ export const DTO_ENTITY_HIDDEN = /@DtoEntityHidden/;
 export const DTO_CREATE_OPTIONAL = /@DtoCreateOptional/;
 export const DTO_UPDATE_OPTIONAL = /@DtoUpdateOptional/;
 export const DTO_RELATION_REQUIRED = /@DtoRelationRequired/;
+export const DTO_ENUM_MAPPING = /@DtoMap/;
+export const DTO_GEN_ENUM_MAPPING = /@DtoGenMapping/;
 export const DTO_RELATION_AS_PROPERTY_ON_CREATE =
   /@DtoRelationAsPropertyOnCreate/;
 export const DTO_RELATION_CAN_CREATE_ON_CREATE =

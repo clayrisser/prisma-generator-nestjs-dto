@@ -124,6 +124,7 @@ export const generate = (options: GeneratorOptions) => {
     noDependencies,
     explicitGeneration,
   });
+  
 
   const indexCollections: Record<string, WriteableFileSpecs> = {};
 

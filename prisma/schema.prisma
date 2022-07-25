@@ -85,10 +85,12 @@ model Company {
   /// @IsRequired
   Product Product[]
 }
-
+/// @DtoGenMapping ({digital:"1", analog:"2"})
 enum ProductType {
   /// 数字化
+  /// @DtoMap("1")
   digital
   /// 模拟化
+  /// @DtoMap("2")
   analogue
 }

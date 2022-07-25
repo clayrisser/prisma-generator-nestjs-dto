@@ -13,6 +13,7 @@ import { isAnnotatedWith } from './field-classifiers';
 
 import type { DMMF } from '@prisma/generator-helper';
 import { NamingStyle, Model, WriteableFileSpecs } from './types';
+import { genEnumMapping } from './generate-enum-mapping';
 
 interface RunParam {
   output: string;
@@ -173,5 +174,7 @@ export const run = ({
     return [connectDto, createDto, updateDto, entity, plainDto];
   });
 
+  const enumFiles = genEnumMapping(dmmf.datamodel.enums, output + '/enums');
+  modelFiles.push(enumFiles);
   return [...modelFiles].flat();
 };
