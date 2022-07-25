@@ -32,4 +32,5 @@ describe('map DMMF.Field to ParsedField', () => {
         expect(parsedField[key as keyof ParsedField]).toBe(field[key]);
       });
   });
+
 });
