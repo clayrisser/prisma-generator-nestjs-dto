@@ -150,10 +150,12 @@ export function parseApiProperty(
 /**
  * Compose `@ApiProperty()` decorator.
  */
-export function decorateApiProperty(field: ParsedField): string {
+export function decorateApiProperty(
+  field: ParsedField,
+  annotateAllProps = false,
+): string {
   let decorator = '';
-
-  if (field.apiProperties?.length) {
+  if (field.apiProperties && (field.apiProperties.length || annotateAllProps)) {
     decorator += '@ApiProperty({\n';
     field.apiProperties.forEach((prop) => {
       decorator += `  ${prop.name}: ${
@@ -164,6 +166,5 @@ export function decorateApiProperty(field: ParsedField): string {
     });
     decorator += '})\n';
   }
-
   return decorator;
 }

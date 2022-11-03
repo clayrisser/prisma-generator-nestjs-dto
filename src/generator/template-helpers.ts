@@ -167,18 +167,10 @@ export const makeHelpers = ({
       field.isRequired && !forceOptional,
       '?',
     )}: ${fieldType(field, useInputTypes)};`;
-
-    const _ignore = `${when(
-      field.kind === 'enum',
-      `@ApiProperty({ enum: ${fieldType(field, useInputTypes)}})\n`,
-    )}${when(
-      field.kind !== 'enum' && annotateAllProps,
-      `@ApiProperty()\n`,
-    )}${append}`;
-
-    return `${decorateApiProperty(field)}${decorateClassValidators(
+    return `${decorateApiProperty(
       field,
-    )}${append}`;
+      annotateAllProps,
+    )}${decorateClassValidators(field)}${append}`;
   };
 
   const fieldsToDtoProps = (
