@@ -13,12 +13,14 @@ interface ComputeModelParamsParam {
   allModels: Model[];
   templateHelpers: TemplateHelpers;
   dmmf: DMMF.Document;
+  annotateAllDtoProperties: boolean;
 }
 export const computeModelParams = ({
   model,
   allModels,
   templateHelpers,
   dmmf,
+  annotateAllDtoProperties,
 }: ComputeModelParamsParam): ModelParams => ({
   // TODO find out if model needs `ConnectDTO`
   connect: computeConnectDtoParams({ model }),
@@ -27,12 +29,14 @@ export const computeModelParams = ({
     allModels, // ? should this be `allModels: models` instead
     templateHelpers,
     dmmf,
+    annotateAllDtoProperties,
   }),
   update: computeUpdateDtoParams({
     model,
     allModels,
     templateHelpers,
     dmmf,
+    annotateAllDtoProperties,
   }),
   entity: computeEntityParams({
     model,

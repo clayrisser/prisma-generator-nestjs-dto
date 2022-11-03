@@ -54,9 +54,13 @@ export interface DtoParams {
   fields: ParsedField[];
   // should include all Enums, ExtraModels, ConnectDTOs and CreateDTOs for related models
   imports: ImportStatementParams[];
+  annotateAllDtoProperties: boolean;
 }
 
-export type ConnectDtoParams = Omit<DtoParams, 'imports'>;
+export type ConnectDtoParams = Omit<
+  DtoParams,
+  'imports' | 'annotateAllDtoProperties'
+>;
 
 export interface CreateDtoParams extends DtoParams {
   extraClasses: string[];

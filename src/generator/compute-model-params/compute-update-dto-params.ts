@@ -42,12 +42,15 @@ interface ComputeUpdateDtoParamsParam {
   allModels: Model[];
   templateHelpers: TemplateHelpers;
   dmmf: DMMF.Document;
+  annotateAllDtoProperties: boolean;
 }
+
 export const computeUpdateDtoParams = ({
   model,
   allModels,
   templateHelpers,
   dmmf,
+  annotateAllDtoProperties,
 }: ComputeUpdateDtoParamsParam): UpdateDtoParams => {
   let hasApiProperty = false;
   const imports: ImportStatementParams[] = [];
@@ -131,10 +134,12 @@ export const computeUpdateDtoParams = ({
     return [...result, mapDMMFToParsedField(field, overrides, decorators)];
   }, [] as ParsedField[]);
 
-  if (apiExtraModels.length || hasApiProperty) {
+  if (apiExtraModels.length || hasApiProperty || annotateAllDtoProperties) {
     const destruct = [];
     if (apiExtraModels.length) destruct.push('ApiExtraModels');
-    if (hasApiProperty) destruct.push('ApiProperty');
+    if (hasApiProperty || annotateAllDtoProperties) {
+      destruct.push('ApiProperty');
+    }
     imports.unshift({ from: '@nestjs/swagger', destruct });
   }
 
@@ -161,5 +166,6 @@ export const computeUpdateDtoParams = ({
     imports: zipImportStatementParams(imports),
     extraClasses,
     apiExtraModels,
+    annotateAllDtoProperties,
   };
 };

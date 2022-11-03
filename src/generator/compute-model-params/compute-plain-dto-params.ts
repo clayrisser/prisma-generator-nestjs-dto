@@ -76,5 +76,6 @@ export const computePlainDtoParams = ({
     fields,
     imports: zipImportStatementParams(imports),
     apiExtraModels,
+    annotateAllDtoProperties: false,
   };
 };

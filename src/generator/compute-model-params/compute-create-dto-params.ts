@@ -43,12 +43,15 @@ interface ComputeCreateDtoParamsParam {
   allModels: Model[];
   templateHelpers: TemplateHelpers;
   dmmf: DMMF.Document;
+  annotateAllDtoProperties: boolean;
 }
+
 export const computeCreateDtoParams = ({
   model,
   allModels,
   templateHelpers,
   dmmf,
+  annotateAllDtoProperties,
 }: ComputeCreateDtoParamsParam): CreateDtoParams => {
   let hasApiProperty = false;
   const imports: ImportStatementParams[] = [];
@@ -99,7 +102,6 @@ export const computeCreateDtoParams = ({
         // You provide list input in the nested `connect` or `create` properties.
         overrides.isList = false;
       }
-      
 
       concatIntoArray(relationInputType.imports, imports);
       concatIntoArray(relationInputType.generatedClasses, extraClasses);
@@ -150,10 +152,12 @@ export const computeCreateDtoParams = ({
     return [...result, mapDMMFToParsedField(field, overrides, decorators)];
   }, [] as ParsedField[]);
 
-  if (apiExtraModels.length || hasApiProperty) {
+  if (apiExtraModels.length || hasApiProperty || annotateAllDtoProperties) {
     const destruct = [];
     if (apiExtraModels.length) destruct.push('ApiExtraModels');
-    if (hasApiProperty) destruct.push('ApiProperty');
+    if (hasApiProperty || annotateAllDtoProperties) {
+      destruct.push('ApiProperty');
+    }
     destruct.push('getSchemaPath');
     imports.unshift({ from: '@nestjs/swagger', destruct });
   }
@@ -183,5 +187,6 @@ export const computeCreateDtoParams = ({
     imports: zipImportStatementParams(imports),
     extraClasses,
     apiExtraModels,
+    annotateAllDtoProperties,
   };
 };

@@ -32,6 +32,7 @@ interface RunParam {
   outputType: string;
   noDependencies: boolean;
   explicitGeneration: boolean;
+  annotateAllDtoProperties: boolean;
 }
 let theHelper: TemplateHelpers;
 
@@ -50,6 +51,7 @@ export const run = ({
     outputType,
     noDependencies,
     explicitGeneration = false,
+    annotateAllDtoProperties,
     ...preAndSuffixes
   } = options;
 
@@ -98,12 +100,12 @@ export const run = ({
     }));
 
   const modelFiles = filteredModels.map((model) => {
-
     const modelParams = computeModelParams({
       model,
       allModels: filteredModels,
       templateHelpers,
       dmmf,
+      annotateAllDtoProperties,
     });
 
     // generate connect-model.dto.ts

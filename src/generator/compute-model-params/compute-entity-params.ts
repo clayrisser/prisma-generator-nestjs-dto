@@ -26,6 +26,7 @@ interface ComputeEntityParamsParam {
   allModels: Model[];
   templateHelpers: TemplateHelpers;
 }
+
 export const computeEntityParams = ({
   model,
   allModels,
@@ -142,5 +143,6 @@ export const computeEntityParams = ({
     fields,
     imports: zipImportStatementParams(imports),
     apiExtraModels,
+    annotateAllDtoProperties: false,
   };
 };

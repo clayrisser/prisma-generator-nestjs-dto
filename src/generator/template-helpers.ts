@@ -161,22 +161,36 @@ export const makeHelpers = ({
     field: ParsedField,
     useInputTypes = false,
     forceOptional = false,
-  ) =>
-    `${decorateApiProperty(field)}${decorateClassValidators(field)}${
-      field.name
-    }${unless(field.isRequired && !forceOptional, '?')}: ${fieldType(
+    annotateAllProps = false,
+  ) => {
+    const append = `${field.name}${unless(
+      field.isRequired && !forceOptional,
+      '?',
+    )}: ${fieldType(field, useInputTypes)};`;
+
+    const _ignore = `${when(
+      field.kind === 'enum',
+      `@ApiProperty({ enum: ${fieldType(field, useInputTypes)}})\n`,
+    )}${when(
+      field.kind !== 'enum' && annotateAllProps,
+      `@ApiProperty()\n`,
+    )}${append}`;
+
+    return `${decorateApiProperty(field)}${decorateClassValidators(
       field,
-      useInputTypes,
-    )};`;
+    )}${append}`;
+  };
 
   const fieldsToDtoProps = (
     fields: ParsedField[],
     useInputTypes = false,
     forceOptional = false,
+    annotateAllProps = false,
   ) =>
     `${each(
       fields,
-      (field) => fieldToDtoProp(field, useInputTypes, forceOptional),
+      (field) =>
+        fieldToDtoProp(field, useInputTypes, forceOptional, annotateAllProps),
       '\n',
     )}`;
 

@@ -44,7 +44,7 @@ export const generate = (options: GeneratorOptions) => {
     options.generator.config.explicitGeneration,
     false,
   );
-  
+
   const outputToNestJsResourceStructure = stringToBoolean(
     options.generator.config.outputToNestJsResourceStructure,
     // using `true` as default value would be a breaking change
@@ -53,6 +53,12 @@ export const generate = (options: GeneratorOptions) => {
 
   const flatResourceStructure = stringToBoolean(
     options.generator.config.flatResourceStructure,
+    // using `true` as default value would be a breaking change
+    false,
+  );
+
+  const annotateAllDtoProperties = stringToBoolean(
+    options.generator.config.annotateAllDtoProperties,
     // using `true` as default value would be a breaking change
     false,
   );
@@ -123,8 +129,8 @@ export const generate = (options: GeneratorOptions) => {
     outputType,
     noDependencies,
     explicitGeneration,
+    annotateAllDtoProperties,
   });
-  
 
   const indexCollections: Record<string, WriteableFileSpecs> = {};
 
