@@ -155,16 +155,20 @@ export function decorateApiProperty(
   annotateAllProps = false,
 ): string {
   let decorator = '';
-  if (field.apiProperties && (field.apiProperties.length || annotateAllProps)) {
-    decorator += '@ApiProperty({\n';
-    field.apiProperties.forEach((prop) => {
-      decorator += `  ${prop.name}: ${
-        prop.name === 'enum' || prop.name === 'oneOf'
-          ? prop.value
-          : encapsulateString(prop.value)
-      },\n`;
-    });
-    decorator += '})\n';
+  if (field.apiProperties) {
+    if (field.apiProperties.length) {
+      decorator += '@ApiProperty({\n';
+      field.apiProperties.forEach((prop) => {
+        decorator += `  ${prop.name}: ${
+          prop.name === 'enum' || prop.name === 'oneOf'
+            ? prop.value
+            : encapsulateString(prop.value)
+        },\n`;
+      });
+      decorator += '})\n';
+    } else if (field.kind !== 'enum' && annotateAllProps) {
+      decorator += '@ApiProperty()\n';
+    }
   }
   return decorator;
 }
