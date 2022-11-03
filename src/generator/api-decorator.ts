@@ -23,6 +23,8 @@ const PrismaScalarToFormat: Record<string, { type: string; format: string }> = {
   Float: { type: 'number', format: 'float' },
   Decimal: { type: 'number', format: 'double' },
   DateTime: { type: 'string', format: 'date-time' },
+  String: { type: 'string', format: 'string' },
+  Boolean: { type: 'boolean', format: 'boolean' },
 };
 
 export function isAnnotatedWithDoc(field: ParsedField): boolean {
