@@ -29,28 +29,34 @@ This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/veg
 - optionally add [validation decorators](#validation-decorators)
 - control output format with additional flags `flatResourceStructure`, `noDependencies`, and `outputType`
 
+This is a fork of [@chen_xinhu/prisma-generator-nestjs-dto](https://github.com/chenxinhu/prisma-generator-nestjs-dto) and adds multiple features:
+
+- added `annotateAllDtoProperties` option from [@stuckinaboot](https://github.com/vegardit/prisma-generator-nestjs-dto/issues/9#issuecomment-911877297) (note that is is disabled by default)
+- added `@DtoRelationCanConnectOrCreateOnCreate` and `@DtoRelationCanConnectOrCreateOnUpdate` annotations
+
 ## Usage?
 
 ```sh
-npm install --save-dev @brakebein/prisma-generator-nestjs-dto
+npm install --save-dev prisma-generator-nestjs-dto
 ```
 
 ```prisma
 generator nestjsDto {
   provider                        = "prisma-generator-nestjs-dto"
   output                          = "../src/generated/nestjs-dto"
-  outputToNestJsResourceStructure = "false"
-  flatResourceStructure           = "false"
-  exportRelationModifierClasses   = "true"
-  reExport                        = "false"
+  outputToNestJsResourceStructure = false
+  flatResourceStructure           = false
+  exportRelationModifierClasses   = true
+  reExport                        = false
   createDtoPrefix                 = "Create"
   updateDtoPrefix                 = "Update"
   dtoSuffix                       = "Dto"
   entityPrefix                    = ""
   entitySuffix                    = ""
-  classValidation                 = "false"
+  classValidation                 = false
   fileNamingStyle                 = "camel"
-  noDependencies                  = "false"
+  noDependencies                  = false
+  annotateAllDtoProperties        = false
 }
 ```
 
@@ -59,8 +65,8 @@ generator nestjsDto {
 All parameters are optional.
 
 - [`output`]: (default: `"../src/generated/nestjs-dto"`) - output path relative to your `schema.prisma` file
-- [`outputToNestJsResourceStructure`]: (default: `"false"`) - writes `dto`s and `entities` to subfolders aligned with [NestJS CRUD generator](https://docs.nestjs.com/recipes/crud-generator). Resource module name is derived from lower-cased model name in `schema.prisma`
-- [`flatResourceStructure`]: (default: `"false"`) - If `outputToNestJsResourceStructure` is `true`, subfolders `dto`s and `entities` are created within the resource folder. Setting this to `true` will flatten the hierarchy.
+- [`outputToNestJsResourceStructure`]: (default: `false`) - writes `dto`s and `entities` to subfolders aligned with [NestJS CRUD generator](https://docs.nestjs.com/recipes/crud-generator). Resource module name is derived from lower-cased model name in `schema.prisma`
+- [`flatResourceStructure`]: (default: `false`) - If `outputToNestJsResourceStructure` is `true`, subfolders `dto`s and `entities` are created within the resource folder. Setting this to `true` will flatten the hierarchy.
 - [`exportRelationModifierClasses`]: (default: `"true"`) - Should extra classes generated for relationship field operations on DTOs be exported?
 - [`reExport`]: (default: `false`) - Should an index.ts be created for every folder?
 - [`createDtoPrefix`]: (default: `"Create"`) - phrase to prefix every `CreateDTO` class with
@@ -69,9 +75,10 @@ All parameters are optional.
 - [`entityPrefix`]: (default: `""`) - phrase to prefix every `Entity` class with
 - [`entitySuffix`]: (default: `""`) - phrase to suffix every `Entity` class with
 - [`fileNamingStyle`]: (default: `"camel"`) - How to name generated files. Valid choices are `"camel"`, `"pascal"`, `"kebab"` and `"snake"`.
-- [`classValidation`]: (default: `"false"`) - Add validation decorators from `class-validator`. Not compatible with `noDependencies = "true"` and `outputType = "interface"`.
-- [`noDependencies`]: (default: `"false"`) - Any imports and decorators that are specific to NestJS and Prisma are omitted, such that there are no references to external dependencies. This is useful if you want to generate appropriate DTOs for the frontend.
+- [`classValidation`]: (default: `false`) - Add validation decorators from `class-validator`. Not compatible with `noDependencies = "true"` and `outputType = "interface"`.
+- [`noDependencies`]: (default: `false`) - Any imports and decorators that are specific to NestJS and Prisma are omitted, such that there are no references to external dependencies. This is useful if you want to generate appropriate DTOs for the frontend.
 - [`outputType`]: (default: `"class"`) - Output the DTOs as `class` or as `interface`. `interface` should only be used to generate DTOs for the frontend.
+- [`annotateAllDtoProperties`]: (default: `false`) - Annotates all properties with `@ApiProperty()`. This is useful if you are not using the typescript `@nestjs/swagger/plugin` (for example in a babel only setup)
 
 ## Annotations
 
