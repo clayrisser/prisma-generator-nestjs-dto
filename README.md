@@ -1,7 +1,7 @@
 # Prisma Generator NestJS DTO
 
-[![Release](https://badge.fury.io/js/%40brakebein%2Fprisma-generator-nestjs-dto.svg)](https://www.npmjs.com/package/@chen_xinhu/prisma-generator-nestjs-dto)
-[![License](https://img.shields.io/github/license/chenxinhu/prisma-generator-nestjs-dto.svg?label=license)](#license)
+[![Release](https://badge.fury.io/js/prisma-generator-nestjs-dto.svg)](https://www.npmjs.com/package/prisma-generator-nestjs-dto)
+[![License](https://img.shields.io/gitlab/license/risserlabs/nestjs/prisma-generator-nestjs-dto.svg?label=license)](#license)
 
 1. [What is it?](#what-is-it)
 1. [Usage](#usage)
