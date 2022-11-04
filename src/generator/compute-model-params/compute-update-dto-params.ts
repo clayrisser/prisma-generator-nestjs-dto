@@ -1,7 +1,8 @@
 import {
   DTO_RELATION_AS_PROPERTY_ON_CREATE,
   DTO_RELATION_CAN_CONNECT_ON_UPDATE,
-  DTO_RELATION_CAN_CRAEATE_ON_UPDATE,
+  DTO_RELATION_CAN_CREATE_ON_UPDATE,
+  DTO_RELATION_CAN_CONNECT_OR_CREATE_ON_UPDATE,
   DTO_RELATION_MODIFIERS_ON_UPDATE,
   DTO_UPDATE_OPTIONAL,
 } from '../annotations';
@@ -80,9 +81,11 @@ export const computeUpdateDtoParams = ({
         allModels,
         templateHelpers,
         preAndSuffixClassName: templateHelpers.updateDtoName,
-        canCreateAnnotation: DTO_RELATION_CAN_CRAEATE_ON_UPDATE,
+        canCreateAnnotation: DTO_RELATION_CAN_CREATE_ON_UPDATE,
         canCreateAsPropertyAnnotation: DTO_RELATION_AS_PROPERTY_ON_CREATE,
         canConnectAnnotation: DTO_RELATION_CAN_CONNECT_ON_UPDATE,
+        canConnectOrCreateAnnotation:
+          DTO_RELATION_CAN_CONNECT_OR_CREATE_ON_UPDATE,
       });
 
       overrides.type = relationInputType.type;

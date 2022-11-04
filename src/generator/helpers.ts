@@ -172,6 +172,7 @@ interface GenerateRelationInputParam {
   canCreateAnnotation: RegExp;
   canCreateAsPropertyAnnotation: RegExp;
   canConnectAnnotation: RegExp;
+  canConnectOrCreateAnnotation: RegExp;
 }
 export const generateRelationInput = ({
   field,
@@ -182,6 +183,7 @@ export const generateRelationInput = ({
   canCreateAnnotation,
   canCreateAsPropertyAnnotation,
   canConnectAnnotation,
+  canConnectOrCreateAnnotation,
 }: GenerateRelationInputParam) => {
   const relationInputClassProps: Array<Pick<ParsedField, 'name' | 'type'>> = [];
 
@@ -287,6 +289,29 @@ export const generateRelationInput = ({
 
     relationInputClassProps.push({
       name: 'connect',
+      type: preAndPostfixedName,
+    });
+  }
+
+  if (isAnnotatedWith(field, canConnectOrCreateAnnotation)) {
+    const preAndPostfixedName = t.createDtoName(field.type);
+    apiExtraModels.push(preAndPostfixedName);
+    const modelToImportFrom = allModels.find(({ name }) => name === field.type);
+    if (!modelToImportFrom) {
+      throw new Error(
+        `related model '${field.type}' for '${model.name}.${field.name}' not found`,
+      );
+    }
+    imports.push({
+      from: slash(
+        `${getRelativePath(model.output.dto, modelToImportFrom.output.dto)}${
+          path.sep
+        }${t.createDtoFilename(field.type)}`,
+      ),
+      destruct: [preAndPostfixedName],
+    });
+    relationInputClassProps.push({
+      name: 'connectOrCreate',
       type: preAndPostfixedName,
     });
   }

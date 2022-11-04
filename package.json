@@ -1,16 +1,25 @@
 {
-  "name": "@risserlabs/prisma-generator-nestjs-dto",
+  "name": "prisma-generator-nestjs-dto",
   "description": "Generates DTO and Entity classes from Prisma Schema for NestJS",
-  "version": "1.0.23",
+  "version": "1.1.0",
   "license": "Apache-2.0",
   "author": {
-    "name": "Benjamin Kroeger",
-    "email": "bk@vegardit.com"
+    "name": "Risser Labs LLC",
+    "email": "info@risserlabs.com",
+    "url": "risserlabs.com"
   },
   "contributors": [
     {
+      "name": "Benjamin Kroeger",
+      "email": "bk@vegardit.com"
+    },
+    {
       "name": "Brakebein",
       "url": "https://github.com/chenxinhu"
+    },
+    {
+      "name": "Clay Risser",
+      "url": "https://github.com/clayrisser"
     },
     {
       "name": "Risser Labs LLC",
@@ -79,9 +88,5 @@
     "ts-jest": "^27.0.5",
     "ts-node": "^10.2.1",
     "typescript": "^4.4.3"
-  },
-  "publishConfig": {
-    "@risserlabs:registry": "https://gitlab.com/api/v4/projects/40747603/packages/npm/",
-    "registry": "https://gitlab.com/api/v4/projects/40747603/packages/npm/"
   }
 }

@@ -18,17 +18,16 @@ These classes can also be used with the built-in [ValidationPipe](https://docs.n
 
 This is a fork of [@brakebein/prisma-generator-nestjs-dto](https://github.com/Brakebein/prisma-generator-nestjs-dto) and adds multiple features:
 
-* add @DtoRelationAsPropertyOnCreate: optionally treat relations as class property in Create dto, and add validation(transformation) decorators.
-* optionally add type transform operators for Decimals and object properties.
-* auto add none decorator docs as `@ApiProperty()` description.
-* add validators for enum values
+- add @DtoRelationAsPropertyOnCreate: optionally treat relations as class property in Create dto, and add validation(transformation) decorators.
+- optionally add type transform operators for Decimals and object properties.
+- auto add none decorator docs as `@ApiProperty()` description.
+- add validators for enum values
 
 This is a fork of [@vegardit/prisma-generator-nestjs-dto](https://github.com/vegardit/prisma-generator-nestjs-dto) and adds multiple features:
 
-* enhance fields with additional schema information, e.g., description, to generate a `@ApiProperty()` decorator (see [Schema Object annotations](#schema-object-annotations))
-* optionally add [validation decorators](#validation-decorators)
-* control output format with additional flags `flatResourceStructure`, `noDependencies`, and `outputType`
-
+- enhance fields with additional schema information, e.g., description, to generate a `@ApiProperty()` decorator (see [Schema Object annotations](#schema-object-annotations))
+- optionally add [validation decorators](#validation-decorators)
+- control output format with additional flags `flatResourceStructure`, `noDependencies`, and `outputType`
 
 ## Usage?
 
@@ -94,15 +93,17 @@ model Post {
   (**Note**: becomes obsolete once [referentialActions](https://github.com/prisma/prisma/issues/7816) are released and stable)
 - @DtoRelationCanCreateOnCreate - adds [create](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#create-a-related-record) option on a relation field in the generated `CreateDTO` - useful when you want to allow to create related model instances
 - @DtoRelationCanConnectOnCreate - adds [connect](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#connect-an-existing-record) option on a relation field in the generated `CreateDTO` - useful when you want/need to connect to an existing related instance
+- @DtoRelationCanConnectOrCreateOnCreate - adds [connectOrCreate](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#connect-an-existing-record) option on a relation field in the generated `CreateDTO` - useful when you want/need to connect to an existing related instance
 - @DtoRelationCanCreateOnUpdate - adds [create](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#create-a-related-record) option on a relation field in the generated `UpdateDTO` - useful when you want to allow to create related model instances
 - @DtoRelationCanConnectOnUpdate - adds [connect](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#connect-an-existing-record) option on a relation field in the generated `UpdateDTO` - useful when you want/need to connect to an existing related instance
+- @DtoRelationCanConnectOrCreateOnUpdate - adds [connectOrCreate](https://www.prisma.io/docs/concepts/components/prisma-client/relation-queries#connect-an-existing-record) option on a relation field in the generated `UpdateDTO` - useful when you want/need to connect to an existing related instance
 
 ### Schema Object annotations
 
 With `@nestjs/swagger`, you can generate an API specification from code.
 Routes, request bodies, query parameters, etc., are annotated with special decorators.
 Properties can be annotated with the `@ApiProperty()` decorator to add schema object information.
-They are partially added at runtime, which will then include `type`, `nullable`, etc. 
+They are partially added at runtime, which will then include `type`, `nullable`, etc.
 But additional information, such as description, need to be added manually.
 
 If using a generator like this, any custom `@ApiProperty()` annotation would be overridden when updating the DTOs.
@@ -110,24 +111,24 @@ To enhance a field with additional schema information, add the schema property p
 
 Currently, following schema properties are supported:
 
-* `description`
-* `minimum`
-* `maximum`
-* `exclusiveMinimum`
-* `exclusiveMaximum`
-* `minLength`
-* `maxLength`
-* `minItems`
-* `maxItems`
-* `example`
+- `description`
+- `minimum`
+- `maximum`
+- `exclusiveMinimum`
+- `exclusiveMaximum`
+- `minLength`
+- `maxLength`
+- `minItems`
+- `maxItems`
+- `example`
 
 Additionally, special data types are inferred and annotated as well:
 
-* `Int: { type: 'integer', format: 'int32' }`
-* `BigInt: { type: 'integer', format: 'int64' }`
-* `Float: { type: 'number', format: 'float' }`
-* `Decimal: { type: 'number', format: 'double' }`
-* `DateTime: { type: 'string', format: 'date-time' }`
+- `Int: { type: 'integer', format: 'int32' }`
+- `BigInt: { type: 'integer', format: 'int64' }`
+- `Float: { type: 'number', format: 'float' }`
+- `Decimal: { type: 'number', format: 'double' }`
+- `DateTime: { type: 'string', format: 'date-time' }`
 
 #### Example
 
@@ -152,7 +153,7 @@ reviewCount: number;
 ```
 
 Default values are added in `CreateDTO` and `UpdateDTO`.
-However, a field with a `@default()` attribute is hidden by default  in `CreateDTO` and `UpdateDTO`,
+However, a field with a `@default()` attribute is hidden by default in `CreateDTO` and `UpdateDTO`,
 hence requires `@DtoCreateOptional` and/or `@DtoUpdateOptional` to be present.
 
 ### Validation decorators
@@ -164,14 +165,14 @@ If the field is optional, it will add `@IsOptional()`, otherwise `@IsNotEmpty()`
 If the field is a list, it will add `@IsArray()`.
 Type validators are inferred from the field's type:
 
-* `String` &rarr; `@IsString()`
-* `Boolean` &rarr; `@IsBoolean()`
-* `Int` &rarr; `@IsInt()`
-* `BigInt` &rarr; `@IsInt()`
-* `Float:` &rarr; `@IsNumber()`
-* `Decimal:` &rarr; `@IsNumber()`
-* `DateTime` &rarr; `@IsRFC3339()`
-* `Json` &rarr; `@IsJSON()`
+- `String` &rarr; `@IsString()`
+- `Boolean` &rarr; `@IsBoolean()`
+- `Int` &rarr; `@IsInt()`
+- `BigInt` &rarr; `@IsInt()`
+- `Float:` &rarr; `@IsNumber()`
+- `Decimal:` &rarr; `@IsNumber()`
+- `DateTime` &rarr; `@IsRFC3339()`
+- `Json` &rarr; `@IsJSON()`
 
 All remaining [validation decorators](https://github.com/typestack/class-validator#validation-decorators) can be added in the comment/documentation section above the field.
 The parentheses can be omitted if not passing a value.
@@ -222,16 +223,16 @@ outputToNestJsResourceStructure = "true"
 }
 
 model Question {
-    id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-    /// @DtoReadOnly
-    createdAt   DateTime @default(now())
-    /// @DtoRelationRequired
-    createdBy   User? @relation("CreatedQuestions", fields: [createdById], references: [id])
-    createdById String? @db.Uuid
-    updatedAt   DateTime @updatedAt
-    /// @DtoRelationRequired
-    updatedBy   User? @relation("UpdatedQuestions", fields: [updatedById], references: [id])
-    updatedById String? @db.Uuid
+id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+/// @DtoReadOnly
+createdAt DateTime @default(now())
+/// @DtoRelationRequired
+createdBy User? @relation("CreatedQuestions", fields: [createdById], references: [id])
+createdById String? @db.Uuid
+updatedAt DateTime @updatedAt
+/// @DtoRelationRequired
+updatedBy User? @relation("UpdatedQuestions", fields: [updatedById], references: [id])
+updatedById String? @db.Uuid
 
     /// @DtoRelationRequired
     /// @DtoRelationCanConnectOnCreate

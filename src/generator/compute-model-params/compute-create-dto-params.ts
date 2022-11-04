@@ -3,6 +3,7 @@ import {
   DTO_RELATION_AS_PROPERTY_ON_CREATE,
   DTO_RELATION_CAN_CONNECT_ON_CREATE,
   DTO_RELATION_CAN_CREATE_ON_CREATE,
+  DTO_RELATION_CAN_CONNECT_OR_CREATE_ON_CREATE,
   DTO_RELATION_MODIFIERS_ON_CREATE,
   DTO_RELATION_REQUIRED,
 } from '../annotations';
@@ -84,6 +85,8 @@ export const computeCreateDtoParams = ({
         canCreateAnnotation: DTO_RELATION_CAN_CREATE_ON_CREATE,
         canCreateAsPropertyAnnotation: DTO_RELATION_AS_PROPERTY_ON_CREATE,
         canConnectAnnotation: DTO_RELATION_CAN_CONNECT_ON_CREATE,
+        canConnectOrCreateAnnotation:
+          DTO_RELATION_CAN_CONNECT_OR_CREATE_ON_CREATE,
       });
 
       const isDtoRelationRequired = isAnnotatedWith(
